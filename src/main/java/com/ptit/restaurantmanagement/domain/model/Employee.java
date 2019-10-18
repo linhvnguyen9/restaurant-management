@@ -47,7 +47,7 @@ public class Employee extends Person {
     }
 
     public double getSalaryByMonth(int month, int year) {
-        int workingDays = timeSheet.getWorkingDays(month, year);
+        int workingDays = timeSheet.getWorkdays(month, year);
 
         return workingDays * baseSalary;
     }
@@ -57,6 +57,6 @@ public class Employee extends Person {
     }
 
     public void setWorkingDays(int month, int year, int workDays) {
-        timeSheet.setWorkingDays(month, year, workDays);
+        timeSheet.setWorkdays(month, year, workDays);
     }
 }
