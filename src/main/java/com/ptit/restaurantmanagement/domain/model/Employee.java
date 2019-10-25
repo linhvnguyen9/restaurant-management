@@ -1,5 +1,6 @@
 package com.ptit.restaurantmanagement.domain.model;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import java.util.Calendar;
 
 public class Employee extends Person {
@@ -58,5 +59,12 @@ public class Employee extends Person {
 
     public void setWorkingDays(int month, int year, int workDays) {
         timeSheet.setWorkdays(month, year, workDays);
+    }
+    
+    public Object[] toObject(){
+        return new Object[]{
+            getId(), getName() , getDob(), getAddress(), getEmployeeType(),
+              managerId , baseSalary
+        };
     }
 }
