@@ -9,4 +9,5 @@
 - **UI Framework:** Java Swing
 - **Database connectivity Framework:** JDBC
 - **Database:** MySQL
+- **Testing:** JUnit
 
