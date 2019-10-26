@@ -10,12 +10,13 @@ package com.ptit.restaurantmanagement.ui;
  * @author Viet
  */
 public class CustomerAddDialog extends javax.swing.JDialog {
-
+    MainJFrame mainJFrame;
     /**
      * Creates new form CustomerAddDialog
      */
     public CustomerAddDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        mainJFrame = (MainJFrame)parent;
         initComponents();
     }
 
@@ -56,6 +57,11 @@ public class CustomerAddDialog extends javax.swing.JDialog {
         jLabel5.setText("Address:");
 
         btCustomerAddOK.setText("OK");
+        btCustomerAddOK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCustomerAddOKActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Type:");
 
@@ -97,9 +103,9 @@ public class CustomerAddDialog extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ComboBoxCustomerType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(TextFieldCustomerAddAddress))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(btCustomerAddOK, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addGap(37, 37, 37))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,18 +116,18 @@ public class CustomerAddDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TextFieldCustomerAddName, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TextFieldCustomerAddDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TextFieldCustomerAddDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(TextFieldCustomerAddPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btCustomerAddOK)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -140,6 +146,18 @@ public class CustomerAddDialog extends javax.swing.JDialog {
     private void ComboBoxCustomerTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxCustomerTypeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ComboBoxCustomerTypeActionPerformed
+
+    private void btCustomerAddOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerAddOKActionPerformed
+        String name = TextFieldCustomerAddName.getText();
+        String type = ComboBoxCustomerType.getSelectedItem().toString();
+        String phone = TextFieldCustomerAddPhoneNumber.getText();
+        String address = TextFieldCustomerAddAddress.getText();
+        String DOB = TextFieldCustomerAddDOB.getText();
+        
+        mainJFrame.addRowCustomer(name, DOB, address, type, phone);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btCustomerAddOKActionPerformed
 
     /**
      * @param args the command line arguments
