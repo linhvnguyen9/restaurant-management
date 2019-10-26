@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -179,6 +183,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEmployeeSearchActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btEmployeeAdd">
               <Properties>
@@ -231,13 +238,8 @@
                                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                                       <Component id="btCustomerAdd" min="-2" pref="71" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="btCustomerSearch" alignment="1" min="-2" pref="71" max="-2" attributes="0"/>
-                                          <Component id="btCustomerRemove" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <Component id="btCustomerSearch" alignment="1" min="-2" pref="71" max="-2" attributes="0"/>
+                                  <Component id="btCustomerRemove" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -343,6 +345,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCustomerSearchActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btCustomerRemove">
               <Properties>
@@ -473,6 +478,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btInvoicerSearchActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btInvoicerView">
               <Properties>
@@ -607,6 +615,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btMenuSearchActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

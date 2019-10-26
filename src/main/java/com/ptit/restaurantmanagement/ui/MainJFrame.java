@@ -112,6 +112,7 @@ public class MainJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         PanelEmployee = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -165,6 +166,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btEmployeeSearch.setText("Search");
+        btEmployeeSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEmployeeSearchActionPerformed(evt);
+            }
+        });
 
         btEmployeeAdd.setText("Add");
         btEmployeeAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -254,6 +260,11 @@ public class MainJFrame extends javax.swing.JFrame {
         btCustomerEdit.setText("Edit");
 
         btCustomerSearch.setText("Search");
+        btCustomerSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCustomerSearchActionPerformed(evt);
+            }
+        });
 
         btCustomerRemove.setText("Remove");
         btCustomerRemove.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -282,11 +293,8 @@ public class MainJFrame extends javax.swing.JFrame {
                             .addGroup(PanelCustomerLayout.createSequentialGroup()
                                 .addGap(46, 46, 46)
                                 .addComponent(btCustomerAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCustomerLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btCustomerSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btCustomerRemove, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                            .addComponent(btCustomerSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btCustomerRemove, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(80, 80, 80))
         );
         PanelCustomerLayout.setVerticalGroup(
@@ -321,6 +329,11 @@ public class MainJFrame extends javax.swing.JFrame {
         jButton5.setText("Add");
 
         btInvoicerSearch.setText("Search");
+        btInvoicerSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btInvoicerSearchActionPerformed(evt);
+            }
+        });
 
         btInvoicerView.setText("View");
 
@@ -393,6 +406,11 @@ public class MainJFrame extends javax.swing.JFrame {
         btMenuRemove.setText("Remove");
 
         btMenuSearch.setText("Search");
+        btMenuSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMenuSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PanelMenuLayout = new javax.swing.GroupLayout(PanelMenu);
         PanelMenu.setLayout(PanelMenuLayout);
@@ -500,8 +518,28 @@ public class MainJFrame extends javax.swing.JFrame {
     private void btCustomerRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btCustomerRemoveMouseClicked
         int row = TableCustomer.getSelectedRow();
         dtmCustomer.removeRow(row);
-        // TODO add your handling code here:
+        //TODO: Delete customer entry in database
     }//GEN-LAST:event_btCustomerRemoveMouseClicked
+
+    private void btEmployeeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeSearchActionPerformed
+        CustomerSearchDialog dialog = new CustomerSearchDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btEmployeeSearchActionPerformed
+
+    private void btCustomerSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerSearchActionPerformed
+        CustomerSearchDialog dialog = new CustomerSearchDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btCustomerSearchActionPerformed
+
+    private void btMenuSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuSearchActionPerformed
+        MenuSearchDialog dialog = new MenuSearchDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btMenuSearchActionPerformed
+
+    private void btInvoicerSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btInvoicerSearchActionPerformed
+        InvoiceSearchDialog dialog = new InvoiceSearchDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btInvoicerSearchActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable InvoiceTable;
@@ -530,6 +568,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btMenuEdit;
     private javax.swing.JButton btMenuRemove;
     private javax.swing.JButton btMenuSearch;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
