@@ -195,6 +195,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btEmployeeOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeOKActionPerformed
+        
         String name = TextFieldEmployeeAddName.getText();
         String DOB = TextFieldEmployeeAddDOB.getText();
         String address = TextFieldEmployeeAddAddress.getText();
@@ -206,6 +207,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         mainJFrame.addRowEmployee(name,DOB, address, type, phone, managerID, salary);
 
         this.dispose();
+        
     }//GEN-LAST:event_btEmployeeOKActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

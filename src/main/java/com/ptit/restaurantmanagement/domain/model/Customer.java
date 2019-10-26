@@ -16,11 +16,18 @@ public class Customer extends Person {
         this.customerType = customerType;
     }
 
+   
+
     public CustomerType getCustomerType() {
         return customerType;
     }
 
     public void setCustomerType(CustomerType customerType) {
         this.customerType = customerType;
+    }
+    public Object[] toObjects(){
+        return new Object[]{
+            getId(), getName(), getCustomerType(),getFormattedDob(), getAddress() ,getPhoneNumbersString()
+        };
     }
 }
