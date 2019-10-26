@@ -1,11 +1,13 @@
 package com.ptit.restaurantmanagement.domain.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class Person {
-    private Integer id; //nullable
+    private Integer id = 0;
     private String name;
     private Calendar dob; //nullable
     private String address; //nullable
@@ -55,6 +57,11 @@ public class Person {
         return dob;
     }
 
+    public String getFormattedDob() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
+        return dateFormat.format(dob.getTime());
+    }
+
     public void setDob(Calendar dob) {
         this.dob = dob;
     }
@@ -75,6 +82,16 @@ public class Person {
 
     public List<String> getPhoneNumbers() {
         return phoneNumbers;
+    }
+
+    public String getPhoneNumbersString() {
+        StringBuilder builder = new StringBuilder();
+
+        for (String phoneNumber : phoneNumbers) {
+            builder.append(phoneNumber).append(" ");
+        }
+
+        return builder.toString();
     }
 
     public void updatePhoneNumber(String newPhoneNumber, String oldPhoneNumber) {
