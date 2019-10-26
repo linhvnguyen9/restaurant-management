@@ -158,6 +158,11 @@ public class MainJFrame extends javax.swing.JFrame {
         jScrollPane4.setViewportView(TableEmployee);
 
         btEmployeeView.setText("View time table");
+        btEmployeeView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEmployeeViewActionPerformed(evt);
+            }
+        });
 
         btEmployeeSearch.setText("Search");
 
@@ -461,6 +466,18 @@ public class MainJFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btEmployeeAddActionPerformed
 
+    private void btEmployeeViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeViewActionPerformed
+//        int row = TableEmployee.getSelectedRow();
+
+        //TODO: Get the selected row number
+        //TODO: Get the selected Employee from EmployeeRepository
+        //TODO: Pass the Employee object to the dialog
+
+//        EmployeeViewTimeTableDialog dialog = new EmployeeViewTimeTableDialog(this, true, selectedEmployee);
+        EmployeeViewTimeTableDialog dialog = new EmployeeViewTimeTableDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btEmployeeViewActionPerformed
+  
     private void btEmployeeRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btEmployeeRemoveMouseClicked
         int row = TableEmployee.getSelectedRow();
         dtmEmployee.removeRow(row);
