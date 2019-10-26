@@ -105,7 +105,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
 
         jLabel6.setText("Type:");
 
-        ComboBoxTypeEmployee.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Manager", "Normal" }));
+        ComboBoxTypeEmployee.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Normal", "Manager", " "}));
 
         jLabel7.setText("Salary:");
 
