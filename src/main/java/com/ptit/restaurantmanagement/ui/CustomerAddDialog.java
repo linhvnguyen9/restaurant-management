@@ -5,6 +5,9 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  *
  * @author Viet
@@ -18,6 +21,9 @@ public class CustomerAddDialog extends javax.swing.JDialog {
         super(parent, modal);
         mainJFrame = (MainJFrame)parent;
         initComponents();
+           Toolkit toolkit = getToolkit();
+        Dimension size = toolkit.getScreenSize();
+        setLocation(size.width/2 - getWidth() /2 , size.height/2 - getHeight()/2 );
     }
 
     /**

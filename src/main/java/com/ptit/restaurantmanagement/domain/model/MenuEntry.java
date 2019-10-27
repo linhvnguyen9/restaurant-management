@@ -1,5 +1,7 @@
 package com.ptit.restaurantmanagement.domain.model;
 
+import jdk.nashorn.internal.runtime.Debug;
+
 public class MenuEntry {
     private int entryId;
     private String name;
@@ -38,5 +40,10 @@ public class MenuEntry {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+    public Object[] toObjects(){
+        return new Object[]{
+            entryId, name, price
+        };
     }
 }
