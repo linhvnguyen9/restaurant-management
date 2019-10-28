@@ -290,6 +290,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btCustomerEdit.setText("Edit");
+        btCustomerEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCustomerEditActionPerformed(evt);
+            }
+        });
 
         btCustomerSearch.setText("Search");
         btCustomerSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -479,6 +484,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btMenuEdit.setText("Edit");
+        btMenuEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMenuEditActionPerformed(evt);
+            }
+        });
 
         btMenuRemove.setText("Remove");
         btMenuRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -655,15 +665,28 @@ public class MainJFrame extends javax.swing.JFrame {
           
     }//GEN-LAST:event_btMenuRemoveActionPerformed
 
+    private void btCustomerEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerEditActionPerformed
+        CustomerAddDialog customerAddDialog = new CustomerAddDialog(this, true);
+        customerAddDialog.setVisible(true);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btCustomerEditActionPerformed
+
+    private void btMenuEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuEditActionPerformed
+        MenuAddDialog menuAddDialog = new  MenuAddDialog(this,true);
+        menuAddDialog.setVisible(true);
+   
+    }//GEN-LAST:event_btMenuEditActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable InvoiceTable;
     private javax.swing.JPanel PanelCustomer;
     private javax.swing.JPanel PanelEmployee;
     private javax.swing.JPanel PanelInvoice;
     private javax.swing.JPanel PanelMenu;
-    private javax.swing.JTable TableCustomer;
+    public javax.swing.JTable TableCustomer;
     public javax.swing.JTable TableEmployee;
-    private javax.swing.JTable TableMenu;
+    public javax.swing.JTable TableMenu;
     private javax.swing.JButton btCustomerAdd;
     private javax.swing.JButton btCustomerEdit;
     private javax.swing.JButton btCustomerRemove;

@@ -43,6 +43,7 @@ public class MenuAddDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         TextFieldAddMenuID = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        btMenuEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -62,6 +63,13 @@ public class MenuAddDialog extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Add & Edit Menu");
 
+        btMenuEdit.setText("Edit");
+        btMenuEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMenuEditActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -70,20 +78,22 @@ public class MenuAddDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(TextFieldMenuAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(TextFieldMenuAddName, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                            .addComponent(TextFieldAddMenuID))
-                        .addGap(53, 53, 53)
-                        .addComponent(btMenuAddOK)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                            .addComponent(TextFieldAddMenuID)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TextFieldMenuAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btMenuEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btMenuAddOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
@@ -106,7 +116,8 @@ public class MenuAddDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldMenuAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(TextFieldMenuAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btMenuEdit))
                 .addGap(54, 54, 54))
         );
 
@@ -122,6 +133,16 @@ public class MenuAddDialog extends javax.swing.JDialog {
        this.dispose();
        
     }//GEN-LAST:event_btMenuAddOKActionPerformed
+
+    private void btMenuEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuEditActionPerformed
+        int row= mainJFrame.TableMenu.getSelectedRow();
+        
+         mainJFrame.TableMenu.setValueAt(TextFieldAddMenuID.getText(), row, 0);
+           mainJFrame.TableMenu.setValueAt(TextFieldMenuAddName.getText(), row, 1);
+             mainJFrame.TableMenu.setValueAt(TextFieldMenuAddPrice.getText(), row, 2);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btMenuEditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,6 +191,7 @@ public class MenuAddDialog extends javax.swing.JDialog {
     private javax.swing.JTextField TextFieldMenuAddName;
     private javax.swing.JTextField TextFieldMenuAddPrice;
     private javax.swing.JButton btMenuAddOK;
+    private javax.swing.JButton btMenuEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
