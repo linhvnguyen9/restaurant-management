@@ -1,7 +1,5 @@
 package com.ptit.restaurantmanagement.domain.model;
 
-import jdk.nashorn.internal.runtime.Debug;
-
 public class MenuEntry {
     private int entryId;
     private String name;

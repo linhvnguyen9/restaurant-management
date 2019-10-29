@@ -1,6 +1,7 @@
 
 package com.ptit.restaurantmanagement.dao;
 
+import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
 import com.ptit.restaurantmanagement.domain.model.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,43 +15,13 @@ import java.util.Date;
 
 public class EmployeesDao {
     private Statement statement;
-    private Connection connection;
-    public EmployeesDao() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/myDb", "root", "19091999");
-            statement = connection.createStatement();
-            
-            createPersonTable();
-            createEmployeesTable();
-           
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    private void createPersonTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS person" +
-                "id_person int auto_increment primary key noat null,"+
-                "name varchar(255) not null,"+
-                "dob date ,"+
-                "addr varchar(255)";
+    private Connection connection = RestaurantManagementDatabase.getConnection();
 
-        statement.execute(query);
+    public EmployeesDao() throws SQLException {
+         RestaurantManagementDatabase.createDatabase(connection);
+         RestaurantManagementDatabase.getConnection();
     }
-    private void createEmployeesTable() throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS employees" +
-                "(id_employees int AUTO_INCREMENT, " +
-                "type varchar(255) not null,"+
-                "id_manager int ,"+
-                "salary double not null"+
-                "primary key ( id_employee),"+
-                "foreign key (id_manager) references employee(id_employee),"+
-                "foreign key (id_employee) references person(id_person))";
 
-        statement.execute(query);
-    }
 //    public int insertEmployee(int id,String name,Date dob,String addr,EmployeeType type,double salary) throws SQLException {
 //        String query = "INSERT INTO employees(name, position, salary)";
 //        String values = String.format(" VALUES('%s', '%s', %f)", name, position, salary);
@@ -63,10 +34,10 @@ public class EmployeesDao {
 //        }
 //        return -1;
 //    }
-
+    
     public int insertEmployee(Employee employee) throws SQLException {
         String query = "INSERT INTO employees(id,name,dob,addr,type,id_manager,salary)";
-        String values = String.format(" VALUES('%d', '%s', '%s','%s','%s','%d','%f')",employee.getId(), employee.getName(),
+        String values = String.format(" VALUES(?,?)",employee.getId(), employee.getName(),
                 employee.getDob(),employee.getAddress(),employee.getEmployeeType().toString(),employee.getManagerId(),employee.getSalaryByMonth(5, 6));
         
         int rowAffected = statement.executeUpdate(query + values, Statement.RETURN_GENERATED_KEYS);
@@ -78,7 +49,7 @@ public class EmployeesDao {
         return -1;
     }
 //    public int updateEmployee(int id) {
-//        return jdbcTemplate.update(
+//        return connection.update(
 //                "UPDATE employee  SET name=?, dob=?, addr=?, type='?, where id = ? limit 1;",name,dob,addr,type,id);
 //    }
      public ArrayList<Person> getListPersons(){
@@ -106,7 +77,10 @@ public class EmployeesDao {
         
         return list;
     }
-     public static void main(String[] args) {
-        new EmployeesDao();
+     
+     public static void main(String[] args)  throws SQLException{
+         Employee employee = new Employee(1,"Hello", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, null, 100.0);
+         
     }
+    
 }
