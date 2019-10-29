@@ -22,8 +22,22 @@ public class EmployeesDaoTest {
     }
 
     @Test
-    public void insertEmployee() {
+    public int insertEmployeeWithNullManagerId() {
         Employee employee = new Employee("Linh", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, null, 30.2);
+        try {
+            return dao.insertEmployee(employee);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 1;
+    }
+
+    @Test
+    public void insertEmployee() {
+        int managerId = insertEmployeeWithNullManagerId();
+
+        Employee employee = new Employee("Linh", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, managerId, 30.2);
         try {
             dao.insertEmployee(employee);
         } catch (SQLException e) {

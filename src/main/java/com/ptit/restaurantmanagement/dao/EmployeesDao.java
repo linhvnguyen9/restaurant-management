@@ -2,14 +2,10 @@
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
-import com.ptit.restaurantmanagement.domain.model.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
+import com.ptit.restaurantmanagement.domain.model.Employee;
+import com.ptit.restaurantmanagement.domain.model.Person;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +22,7 @@ public class EmployeesDao {
     public int insertEmployee(Employee employee) throws SQLException {
         String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(createPerson);
+        PreparedStatement preparedStatement = connection.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, employee.getName());
 
         Date utilDate = employee.getDob().getTime();
@@ -35,11 +31,11 @@ public class EmployeesDao {
         preparedStatement.setDate(2, sqlDate);
         preparedStatement.setString(3, employee.getAddress());
 
-        int employeeId = preparedStatement.executeUpdate(createPerson, Statement.RETURN_GENERATED_KEYS);
-        if (employeeId != -1) {
+        int personId = preparedStatement.executeUpdate();
+        if (personId != -1) {
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {
-                employeeId = resultSet.getInt(1);
+                personId = resultSet.getInt(1);
             }
         } else {
             throw new SQLException();
@@ -48,14 +44,23 @@ public class EmployeesDao {
         String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
 
         preparedStatement = connection.prepareStatement(createEmployee);
-        preparedStatement.setInt(1, employeeId);
+        preparedStatement.setInt(1, personId);
         preparedStatement.setString(2, employee.getEmployeeType().toString());
-        preparedStatement.setDouble(3, employee.getBaseSalary());
 
-        preparedStatement.executeUpdate(createEmployee);
+        int employeeMamangerId = employee.getManagerId();
+        if (employeeMamangerId == -1) {
+            preparedStatement.setNull(3, Types.INTEGER);
+        } else {
+            preparedStatement.setInt(3, employeeMamangerId);
+        }
 
-        return employeeId;
+        preparedStatement.setDouble(4, employee.getBaseSalary());
+
+        preparedStatement.executeUpdate();
+
+        return personId;
     }
+
 //    public int updateEmployee(int id) {
 //        return connection.update(
 //                "UPDATE employee  SET name=?, dob=?, addr=?, type='?, where id = ? limit 1;",name,dob,addr,type,id);
@@ -85,10 +90,4 @@ public class EmployeesDao {
         
         return list;
     }
-     
-     public static void main(String[] args)  throws SQLException{
-         Employee employee = new Employee(1,"Hello", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, null, 100.0);
-         
-    }
-    
 }

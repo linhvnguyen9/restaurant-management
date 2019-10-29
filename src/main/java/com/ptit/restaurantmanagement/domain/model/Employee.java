@@ -31,6 +31,8 @@ public class Employee extends Person {
     }
 
     public int getManagerId() {
+        if (managerId == null)
+            return -1;
         return managerId;
     }
 
