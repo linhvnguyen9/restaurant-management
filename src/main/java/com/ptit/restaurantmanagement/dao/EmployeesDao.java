@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,31 +23,38 @@ public class EmployeesDao {
          RestaurantManagementDatabase.getConnection();
     }
 
-//    public int insertEmployee(int id,String name,Date dob,String addr,EmployeeType type,double salary) throws SQLException {
-//        String query = "INSERT INTO employees(name, position, salary)";
-//        String values = String.format(" VALUES('%s', '%s', %f)", name, position, salary);
-//
-//        int rowAffected = statement.executeUpdate(query + values, Statement.RETURN_GENERATED_KEYS);
-//        if (rowAffected == 1) {
-//            ResultSet rs = statement.getGeneratedKeys();
-//            if (rs.next())
-//                return rs.getInt(1);
-//        }
-//        return -1;
-//    }
-    
     public int insertEmployee(Employee employee) throws SQLException {
-        String query = "INSERT INTO employees(id,name,dob,addr,type,id_manager,salary)";
-        String values = String.format(" VALUES(?,?)",employee.getId(), employee.getName(),
-                employee.getDob(),employee.getAddress(),employee.getEmployeeType().toString(),employee.getManagerId(),employee.getSalaryByMonth(5, 6));
-        
-        int rowAffected = statement.executeUpdate(query + values, Statement.RETURN_GENERATED_KEYS);
-        if (rowAffected == 1) {
-            ResultSet rs = statement.getGeneratedKeys();
-            if (rs.next())
-                return rs.getInt(1);
+        String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(createPerson);
+        preparedStatement.setString(1, employee.getName());
+
+        Date utilDate = employee.getDob().getTime();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+        preparedStatement.setDate(2, sqlDate);
+        preparedStatement.setString(3, employee.getAddress());
+
+        int employeeId = preparedStatement.executeUpdate(createPerson, Statement.RETURN_GENERATED_KEYS);
+        if (employeeId != -1) {
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                employeeId = resultSet.getInt(1);
+            }
+        } else {
+            throw new SQLException();
         }
-        return -1;
+
+        String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
+
+        preparedStatement = connection.prepareStatement(createEmployee);
+        preparedStatement.setInt(1, employeeId);
+        preparedStatement.setString(2, employee.getEmployeeType().toString());
+        preparedStatement.setDouble(3, employee.getBaseSalary());
+
+        preparedStatement.executeUpdate(createEmployee);
+
+        return employeeId;
     }
 //    public int updateEmployee(int id) {
 //        return connection.update(
