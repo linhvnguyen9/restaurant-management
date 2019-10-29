@@ -26,9 +26,8 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.1.0</version>
             <scope>test</scope>
-        </dependency
-
-	<dependency>
+        </dependency>
+        <dependency>
 	    <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.18</version>
