@@ -37,11 +37,40 @@ public class EmployeesDaoTest {
     public void insertEmployee() {
         int managerId = insertEmployeeWithNullManagerId();
 
-        Employee employee = new Employee("Linh", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, managerId, 30.2);
+        Employee employee = new Employee("Huy", Calendar.getInstance(), "HCM", EmployeeType.NORMAL, managerId, 100.0);
         try {
             dao.insertEmployee(employee);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    @Test
+    public void getListEmployee() {
+        dao.getListEmployee();
+
+    }
+    @Test
+    public void searchListPerson() {
+        dao.getListEmployee();
+        dao.searchListEmployee("Linh");
+
+    }
+    @Test
+    public void UpdateEmployee() {
+        Employee employee = new Employee("Update2222", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 9999.9);
+        try {
+            dao.updateEmployee(employee,5);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void deleteEmployee() {
+        try {
+            dao.deleteEmployee(4);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 }
