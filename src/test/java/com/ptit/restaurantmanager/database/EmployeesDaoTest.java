@@ -53,30 +53,31 @@ public class EmployeesDaoTest {
     @Test
     public void getListEmployee() {
         dao.getListEmployee();
-
     }
+
     @Test
     public void searchEmployee() {
         try {
-            System.out.println(dao.searchListEmployee(1));
+            System.out.println(dao.searchListEmployee(3));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
     @Test
-    public void UpdateEmployee() {
-        Employee employee = new Employee("Update2222", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 99956459.9);
+    public void updateEmployee() {
+        Employee employee = new Employee("Update22eewwwe22", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 99956459.9);
         try {
-            dao.updateEmployee(employee,5);
+            dao.updateEmployee(employee,3);
         } catch (SQLException e){
             e.printStackTrace();
         }
     }
+
     @Test
     public void deleteEmployee() {
         try {
-            dao.deleteEmployee(14);
+            dao.deleteEmployee(6);
         } catch (SQLException e){
             e.printStackTrace();
         }

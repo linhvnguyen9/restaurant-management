@@ -75,13 +75,12 @@ public class EmployeesDao {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //print out listEmployee
-//        for (int i = 0; i < listEmployee.size(); i++)
-//            System.out.println(listEmployee.get(i).toString());
         return new ArrayList<>();
     }
 
     public void updateEmployee(Employee employee, int id) throws SQLException {
+        personDao.updatePerson(employee, id);
+
         String updateEmployees = "UPDATE employee SET type=?,id_manager = ?,salary=? WHERE id_employee=?;";
         PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
 
@@ -98,34 +97,10 @@ public class EmployeesDao {
         pstmt.setInt(4, id);
         System.out.println(pstmt.toString());
         pstmt.executeUpdate();
-
-        //update person
-        String updatePerson = "UPDATE person SET name=?, dob=?, addr=? WHERE id_person=?;";
-        PreparedStatement pstmt2 = stament.prepareStatement(updatePerson);
-
-        pstmt2.setString(1, employee.getName());
-
-        Date utilDate = employee.getDob().getTime();
-        java.sql.Date date = new java.sql.Date(utilDate.getTime());
-
-        pstmt2.setDate(2, date);
-        pstmt2.setString(3, employee.getAddress());
-        pstmt2.setInt(4, id);
-
-        System.out.println(pstmt2.toString());
-        pstmt2.executeUpdate();
     }
 
     public void deleteEmployee(int id) throws SQLException {
-        String deleteEmployee = "delete from employee where id_employee=?;";
-        PreparedStatement pstmEmployee = stament.prepareStatement(deleteEmployee);
-        pstmEmployee.setInt(1, id);
-        pstmEmployee.executeUpdate();
-
-        String deletePerson = "delete from person where id_person=?;";
-        PreparedStatement pstmtPerson = stament.prepareStatement(deletePerson);
-        pstmtPerson.setInt(1, id);
-        pstmtPerson.executeUpdate();
+        personDao.deletePerson(id);
     }
 
     public Employee searchListEmployee(int id) throws SQLException {
