@@ -62,12 +62,11 @@ public class CustomerDao {
             PreparedStatement ps = stament.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id_customer");
+                int id = rs.getInt("id_person");
                 String name = (rs.getString("name"));
 
                 Calendar dob = Calendar.getInstance();
                 dob.setTime(rs.getDate("dob"));
-
 
                 String address = (rs.getString("addr"));
                 CustomerType type;
@@ -87,7 +86,10 @@ public class CustomerDao {
             e.printStackTrace();
         }
         //print out listEmployee
+        for (int i=0;i<listCustomer.size();i++)
+            System.out.println(listCustomer.get(i).toString());
         return new ArrayList<>();
+
     }
 
     public void updateCustomer(Customer customer, int id) throws SQLException {

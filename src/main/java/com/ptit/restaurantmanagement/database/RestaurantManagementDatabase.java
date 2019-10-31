@@ -25,6 +25,7 @@ public class RestaurantManagementDatabase {
             createPersonTable(connection);
             createEmployeesTable(connection);
             createCustomerTable((connection));
+            createMenuEntryTable(connection);
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -64,6 +65,16 @@ public class RestaurantManagementDatabase {
                 "type varchar(255) not null,"+
                 "primary key(id_customer),"+
                 "foreign key (id_customer) references person(id_person))";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createMenuEntryTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS menu_entry("+
+                "id_menu_entry int auto_increment not null,"+
+                "name varchar(255) not null,"+
+                "price double not null,"+
+                "primary key( id_menu_entry))";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
