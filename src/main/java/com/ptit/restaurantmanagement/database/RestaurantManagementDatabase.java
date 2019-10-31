@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class RestaurantManagementDatabase {
     public static final String DATABASENAME = "testDb";
     public static final String USER = "root";
-    public static final String PASS = "19091999";
+    public static final String PASS = "";
     public static final String BASEURL = "jdbc:mysql://localhost:3306/" + DATABASENAME;
 
     public static void createDatabase(Connection connection) throws SQLException {
@@ -53,8 +53,8 @@ public class RestaurantManagementDatabase {
                 "id_manager int ,"+
                 "salary double not null, "+
                 "primary key ( id_employee),"+
-                "foreign key (id_manager) references employee(id_employee),"+
-                "foreign key (id_employee) references person(id_person))";
+                "foreign key (id_manager) references employee(id_employee) ON DELETE CASCADE,"+
+                "foreign key (id_employee) references person(id_person) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);

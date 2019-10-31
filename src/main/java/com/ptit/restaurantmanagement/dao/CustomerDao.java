@@ -15,6 +15,7 @@ import java.util.Date;
 public class CustomerDao {
     private Statement statement;
     private Connection stament = RestaurantManagementDatabase.getConnection();
+    private PersonDao personDao = new PersonDao();
     ArrayList<Customer> listCustomer = new ArrayList<>();
 
     public CustomerDao() throws SQLException {
@@ -23,30 +24,11 @@ public class CustomerDao {
     }
 
     public int insertCustomer(Customer customer) throws SQLException {
-        String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
-
-        PreparedStatement preparedStatement = stament.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, customer.getName());
-
-        Date utilDate = customer.getDob().getTime();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-
-        preparedStatement.setDate(2, sqlDate);
-        preparedStatement.setString(3, customer.getAddress());
-
-        int personId = preparedStatement.executeUpdate();
-        if (personId != -1) {
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                personId = resultSet.getInt(1);
-            }
-        } else {
-            throw new SQLException();
-        }
+        int personId = personDao.insertPerson(customer);
 
         String createCustomer = "INSERT INTO customer VALUES(?, ?)";
 
-        preparedStatement = stament.prepareStatement(createCustomer);
+        PreparedStatement preparedStatement = stament.prepareStatement(createCustomer);
         preparedStatement.setInt(1, personId);
         preparedStatement.setString(2, customer.getCustomerType().toString());
 

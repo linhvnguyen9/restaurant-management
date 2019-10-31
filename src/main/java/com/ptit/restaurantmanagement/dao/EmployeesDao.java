@@ -14,6 +14,7 @@ import java.util.Date;
 public class EmployeesDao {
     private Statement statement;
     private Connection stament = RestaurantManagementDatabase.getConnection();
+    private PersonDao personDao = new PersonDao();
     ArrayList<Employee> listEmployee = new ArrayList<>();
 
     public EmployeesDao() throws SQLException {
@@ -22,31 +23,13 @@ public class EmployeesDao {
     }
 
     public int insertEmployee(Employee employee) throws SQLException {
-        String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
-
-        PreparedStatement preparedStatement = stament.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, employee.getName());
-
-        Date utilDate = employee.getDob().getTime();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-
-        preparedStatement.setDate(2, sqlDate);
-        preparedStatement.setString(3, employee.getAddress());
-
-        int personId = preparedStatement.executeUpdate();
-        if (personId != -1) {
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                personId = resultSet.getInt(1);
-            }
-        } else {
-            throw new SQLException();
-        }
-
         String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
 
-        preparedStatement = stament.prepareStatement(createEmployee);
+        PreparedStatement preparedStatement = stament.prepareStatement(createEmployee);
+
+        int personId = personDao.insertPerson(employee);
         preparedStatement.setInt(1, personId);
+
         preparedStatement.setString(2, employee.getEmployeeType().toString());
 
         int employeeMamangerId = employee.getManagerId();
@@ -64,98 +47,47 @@ public class EmployeesDao {
     }
 
     public ArrayList<Employee> getListEmployee() {
-        String sql = "SELECT * FROM testdb.person,testdb.employee WHERE id_person = id_employee;";
+        String sql = "SELECT * FROM person,employee WHERE id_person = id_employee;";
 
         try {
             PreparedStatement ps = stament.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = (rs.getInt("id_employee"));
-                String name = (rs.getString("name"));
-
-                Calendar dob = Calendar.getInstance();
-                dob.setTime(rs.getDate("dob"));
-
-                String address = (rs.getString("addr"));
-                EmployeeType employeeType;
-                if (rs.getString("type").equals("MANAGER")) {
-                    employeeType = EmployeeType.MANAGER;
-                }
-                else {
-                    employeeType = EmployeeType.NORMAL;
-                }
-                int managerId = rs.getInt("id_manager");
-                double salary = rs.getDouble("salary");
-                Employee s = new Employee(id, name, dob, address, employeeType, managerId, salary);
-                listEmployee.add(s);
+                listEmployee.add(employeeFromResultSet(rs));
             }
             return listEmployee;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //print out listEmployee
-//        for (int i = 0; i < listEmployee.size(); i++)
-//            System.out.println(listEmployee.get(i).toString());
         return new ArrayList<>();
     }
 
     public void updateEmployee(Employee employee, int id) throws SQLException {
-        //update employee
+        personDao.updatePerson(employee, id);
 
         String updateEmployees = "UPDATE employee SET type=?,id_manager = ?,salary=? WHERE id_employee=?;";
         PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
 
         pstmt.setString(1, employee.getEmployeeType().toString());
 
-        pstmt.setInt(2, employee.getManagerId());
+        int employeeManagerId = employee.getManagerId();
+        if (employeeManagerId == -1) {
+            pstmt.setNull(2, Types.INTEGER);
+        } else {
+            pstmt.setInt(2, employeeManagerId);
+        }
+
         pstmt.setDouble(3, employee.getBaseSalary());
         pstmt.setInt(4, id);
         System.out.println(pstmt.toString());
         pstmt.executeUpdate();
-
-        //update person
-        String updatePerson = "UPDATE person SET name=?, dob=?, addr=? WHERE id_person=?;";
-        PreparedStatement pstmt2 = stament.prepareStatement(updatePerson);
-
-        pstmt2.setString(1, employee.getName());
-
-        Date utilDate = employee.getDob().getTime();
-        java.sql.Date date = new java.sql.Date(utilDate.getTime());
-
-        pstmt2.setDate(2, date);
-        pstmt2.setString(3, employee.getAddress());
-        pstmt2.setInt(4, id);
-
-        System.out.println(pstmt2.toString());
-        pstmt2.executeUpdate();
-
-
-
-        boolean autoCommit = stament.getAutoCommit();
-        try {
-            stament.setAutoCommit(false);
-
-            stament.commit();
-        } catch (SQLException exc) {
-            stament.rollback();
-        } finally {
-            stament.setAutoCommit(autoCommit);
-        }
     }
 
     public void deleteEmployee(int id) throws SQLException {
-        String deleteEmployee = "delete from employee where id_employee=?;";
-        PreparedStatement pstmEmployee = stament.prepareStatement(deleteEmployee);
-        pstmEmployee.setInt(1, id);
-        pstmEmployee.executeUpdate();
-
-        String deletePerson = "delete from person where id_person=?;";
-        PreparedStatement pstmtPerson = stament.prepareStatement(deletePerson);
-        pstmtPerson.setInt(1, id);
-        pstmtPerson.executeUpdate();
+        personDao.deletePerson(id);
     }
 
-    public Employee searchListEmployee(int id) throws SQLException {
+    public Employee getEmployeesById(int id) throws SQLException {
         String search = "select * from person,employee where id_person=id_employee and id_employee=?;";
         PreparedStatement pstmEmployee = stament.prepareStatement(search);
         pstmEmployee.setInt(1, id);
@@ -163,8 +95,26 @@ public class EmployeesDao {
         ResultSet rs = pstmEmployee.executeQuery();
         rs.next();
 
-        int employeeId = (rs.getInt("id_person"));
-        String name = (rs.getString("name"));
+        return employeeFromResultSet(rs);
+    }
+
+    public ArrayList<Employee> getEmployeesByName(String name) throws SQLException {
+        String search = String.format("SELECT * FROM person,employee WHERE id_person=id_employee AND name LIKE '%%%s%%'", name);
+        Statement statement = stament.createStatement();
+
+        ResultSet rs = statement.executeQuery(search);
+
+        ArrayList<Employee> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(employeeFromResultSet(rs));
+        }
+
+        return result;
+    }
+
+    private Employee employeeFromResultSet(ResultSet rs) throws SQLException {
+        int employeeId = rs.getInt("id_person");
+        String name = rs.getString("name");
 
         Calendar dob = Calendar.getInstance();
         dob.setTime(rs.getDate("dob"));
