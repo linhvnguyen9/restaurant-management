@@ -69,4 +69,14 @@ public class Employee extends Person {
                 managerId, baseSalary
         };
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Employee{" +
+                "employeeType=" + employeeType +
+                ", managerId=" + managerId +
+                ", baseSalary=" + baseSalary +
+                ", timeSheet=" + timeSheet +
+                '}';
+    }
 }

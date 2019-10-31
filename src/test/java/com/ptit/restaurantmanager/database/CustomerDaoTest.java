@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-public class EmployeesDaoTest {
+public class CustomerDaoTest {
     private static EmployeesDao dao;
-    private static CustomerDao  customerDao;
+    private static CustomerDao customerDao;
 
     @BeforeAll
     public static void init() {
@@ -55,15 +55,7 @@ public class EmployeesDaoTest {
         dao.getListEmployee();
 
     }
-    @Test
-    public void searchEmployee() {
-        try {
-            System.out.println(dao.searchListEmployee(1));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
     @Test
     public void UpdateEmployee() {
         Employee employee = new Employee("Update2222", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 9999.9);
@@ -102,5 +94,4 @@ public class EmployeesDaoTest {
             e.printStackTrace();
         }
     }
-
 }
