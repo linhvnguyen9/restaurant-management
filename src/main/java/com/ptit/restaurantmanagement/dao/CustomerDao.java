@@ -90,64 +90,46 @@ public class CustomerDao {
         return new ArrayList<>();
     }
 
-    public void updateEmployee(Employee employee, int id) throws SQLException {
+    public void updateCustomer(Customer customer, int id) throws SQLException {
         //update employee
 
-        String updateEmployees = "UPDATE employee SET type=?,salary=? WHERE id_employee=?;";
+        String updateEmployees = "UPDATE customer SET type=? WHERE id_customer=?;";
         PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
 
-        pstmt.setString(1, employee.getEmployeeType().toString());
-
-        //pstmt.setInt(2, employee.getManagerId());
-        pstmt.setDouble(2, employee.getBaseSalary());
-        pstmt.setInt(3, id);
-        System.out.println(pstmt.toString());
+        pstmt.setString(1, customer.getCustomerType().toString());
+        pstmt.setInt(2, id);
         pstmt.executeUpdate();
 
         //update person
         String updatePerson = "UPDATE person SET name=?, dob=?, addr=? WHERE id_person=?;";
         PreparedStatement pstmt2 = stament.prepareStatement(updatePerson);
 
-        pstmt2.setString(1, employee.getName());
+        pstmt2.setString(1, customer.getName());
 
-        Date utilDate = employee.getDob().getTime();
+        Date utilDate = customer.getDob().getTime();
         java.sql.Date date = new java.sql.Date(utilDate.getTime());
 
         pstmt2.setDate(2, date);
-        pstmt2.setString(3, employee.getAddress());
+        pstmt2.setString(3, customer.getAddress());
         pstmt2.setInt(4, id);
 
         System.out.println(pstmt2.toString());
         pstmt2.executeUpdate();
 
-
-        boolean autoCommit = stament.getAutoCommit();
-        try {
-            stament.setAutoCommit(false);
-
-            stament.commit();
-        } catch (SQLException exc) {
-            stament.rollback();
-        } finally {
-            stament.setAutoCommit(autoCommit);
-        }
     }
-
-    public void deleteEmployee(int id) throws SQLException {
-        String deleteEmployee = "delete from employee where id_employee=?;";
-        PreparedStatement pstmEmployee = stament.prepareStatement(deleteEmployee);
-        pstmEmployee.setInt(1, id);
-        pstmEmployee.executeUpdate();
+    public void deleteCustomer(int id) throws SQLException {
+        String delete = "delete from employee where id_employee=?;";
+        PreparedStatement pstmCustomer = stament.prepareStatement(delete);
+        pstmCustomer.setInt(1, id);
+        pstmCustomer.executeUpdate();
 
         String deletePerson = "delete from person where id_person=?;";
         PreparedStatement pstmtPerson = stament.prepareStatement(deletePerson);
         pstmtPerson.setInt(1, id);
         pstmtPerson.executeUpdate();
-
-
     }
 
-    public void searchListEmployee(String name) {
+    public void searchListCustomer(String name) {
         for (int i = 0; i < listCustomer.size(); i++)
             if (listCustomer.get(i).getName().equals(name))
                 System.out.println(listCustomer.get(i).toString());

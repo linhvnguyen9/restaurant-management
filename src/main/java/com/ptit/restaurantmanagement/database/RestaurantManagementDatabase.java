@@ -59,11 +59,11 @@ public class RestaurantManagementDatabase {
         statement.execute(query);
     }
     private static void createCustomerTable(Connection connection) throws SQLException {
-        String query = "create table customer("+"id_customer int not null,"+
+        String query = "CREATE TABLE IF NOT EXISTS customer"+
+                "(id_customer int not null,"+
                 "type varchar(255) not null,"+
                 "primary key(id_customer),"+
-                "foreign key (id_customer) references person(id_person)" +
-                ");";
+                "foreign key (id_customer) references person(id_person))";
 
         Statement statement = connection.createStatement();
         statement.execute(query);

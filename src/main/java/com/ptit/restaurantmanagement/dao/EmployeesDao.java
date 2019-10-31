@@ -155,10 +155,30 @@ public class EmployeesDao {
         pstmtPerson.executeUpdate();
     }
 
+    public Employee searchListEmployee(int id) throws SQLException {
+        String search = "select * from person,employee where id_person=id_employee and id_employee=?;";
+        PreparedStatement pstmEmployee = stament.prepareStatement(search);
+        pstmEmployee.setInt(1, id);
 
-    public void searchListEmployee(String name) {
-        for (int i = 0; i < listEmployee.size(); i++)
-            if (listEmployee.get(i).getName().equals(name))
-                System.out.println(listEmployee.get(i).toString());
+        ResultSet rs = pstmEmployee.executeQuery();
+        rs.next();
+
+        int employeeId = (rs.getInt("id_person"));
+        String name = (rs.getString("name"));
+
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(rs.getDate("dob"));
+
+        String address = (rs.getString("addr"));
+        EmployeeType employeeType;
+        if (rs.getString("type").equals("MANAGER")) {
+            employeeType = EmployeeType.MANAGER;
+        }
+        else {
+            employeeType = EmployeeType.NORMAL;
+        }
+        int managerId = rs.getInt("id_manager");
+        double salary = rs.getDouble("salary");
+        return new Employee(employeeId, name, dob, address, employeeType, managerId, salary);
     }
 }

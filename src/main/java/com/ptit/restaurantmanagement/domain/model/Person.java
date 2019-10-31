@@ -102,4 +102,15 @@ public class Person {
     public void removePhoneNumber(String phoneNumber) {
         phoneNumbers.remove(phoneNumber);
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dob=" + dob +
+                ", address='" + address + '\'' +
+                ", phoneNumbers=" + phoneNumbers +
+                '}';
+    }
 }
