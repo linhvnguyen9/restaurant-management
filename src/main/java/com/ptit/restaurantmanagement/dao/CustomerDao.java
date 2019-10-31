@@ -1,37 +1,38 @@
-
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
+import com.ptit.restaurantmanagement.domain.model.Customer;
+import com.ptit.restaurantmanagement.domain.model.CustomerType;
 import com.ptit.restaurantmanagement.domain.model.Employee;
 import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-import com.ptit.restaurantmanagement.domain.model.Person;
+
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EmployeesDao {
+public class CustomerDao {
     private Statement statement;
     private Connection stament = RestaurantManagementDatabase.getConnection();
-    ArrayList<Employee> listEmployee = new ArrayList<>();
+    ArrayList<Customer> listCustomer = new ArrayList<>();
 
-    public EmployeesDao() throws SQLException {
+    public CustomerDao() throws SQLException {
         RestaurantManagementDatabase.createDatabase(stament);
         RestaurantManagementDatabase.getConnection();
     }
 
-    public int insertEmployee(Employee employee) throws SQLException {
+    public int insertCustomer(Customer customer) throws SQLException {
         String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
 
         PreparedStatement preparedStatement = stament.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, employee.getName());
+        preparedStatement.setString(1, customer.getName());
 
-        Date utilDate = employee.getDob().getTime();
+        Date utilDate = customer.getDob().getTime();
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
         preparedStatement.setDate(2, sqlDate);
-        preparedStatement.setString(3, employee.getAddress());
+        preparedStatement.setString(3, customer.getAddress());
 
         int personId = preparedStatement.executeUpdate();
         if (personId != -1) {
@@ -43,59 +44,49 @@ public class EmployeesDao {
             throw new SQLException();
         }
 
-        String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
+        String createCustomer = "INSERT INTO customer VALUES(?, ?)";
 
-        preparedStatement = stament.prepareStatement(createEmployee);
+        preparedStatement = stament.prepareStatement(createCustomer);
         preparedStatement.setInt(1, personId);
-        preparedStatement.setString(2, employee.getEmployeeType().toString());
-
-        int employeeMamangerId = employee.getManagerId();
-        if (employeeMamangerId == -1) {
-            preparedStatement.setNull(3, Types.INTEGER);
-        } else {
-            preparedStatement.setInt(3, employeeMamangerId);
-        }
-
-        preparedStatement.setDouble(4, employee.getBaseSalary());
+        preparedStatement.setString(2, customer.getCustomerType().toString());
 
         preparedStatement.executeUpdate();
 
         return personId;
     }
 
-    public ArrayList<Employee> getListEmployee() {
-        String sql = "SELECT * FROM testdb.person,testdb.employee WHERE id_person = id_employee;";
+    public ArrayList<Customer> getListCustomer() {
+        String sql = "SELECT * FROM person,customer WHERE id_person = id_customer;";
 
         try {
             PreparedStatement ps = stament.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = (rs.getInt("id_employee"));
+                int id = rs.getInt("id_customer");
                 String name = (rs.getString("name"));
 
                 Calendar dob = Calendar.getInstance();
                 dob.setTime(rs.getDate("dob"));
 
+
                 String address = (rs.getString("addr"));
-                EmployeeType employeeType;
-                if (rs.getString("type").equals("MANAGER")) {
-                    employeeType = EmployeeType.MANAGER;
-                }
-                else {
-                    employeeType = EmployeeType.NORMAL;
-                }
-                int managerId = rs.getInt("id_manager");
-                double salary = rs.getDouble("salary");
-                Employee s = new Employee(id, name, dob, address, employeeType, managerId, salary);
-                listEmployee.add(s);
+                CustomerType type;
+                if (rs.getString("type").equals("NORMAL"))
+                    type = CustomerType.NORMAL;
+                else
+                    type = CustomerType.VIP;
+                Customer s = new Customer(id, name, dob, address, type);
+                listCustomer.add(s);
+
+                for (int i = 0; i < listCustomer.size(); i++)
+                    System.out.println(listCustomer.get(i).toString());
+
+                return listCustomer;
             }
-            return listEmployee;
         } catch (Exception e) {
             e.printStackTrace();
         }
         //print out listEmployee
-//        for (int i = 0; i < listEmployee.size(); i++)
-//            System.out.println(listEmployee.get(i).toString());
         return new ArrayList<>();
     }
 
@@ -130,7 +121,6 @@ public class EmployeesDao {
         pstmt2.executeUpdate();
 
 
-
         boolean autoCommit = stament.getAutoCommit();
         try {
             stament.setAutoCommit(false);
@@ -155,14 +145,11 @@ public class EmployeesDao {
         pstmtPerson.executeUpdate();
 
 
-
-
     }
 
-
     public void searchListEmployee(String name) {
-        for (int i = 0; i < listEmployee.size(); i++)
-            if (listEmployee.get(i).getName().equals(name))
-                System.out.println(listEmployee.get(i).toString());
+        for (int i = 0; i < listCustomer.size(); i++)
+            if (listCustomer.get(i).getName().equals(name))
+                System.out.println(listCustomer.get(i).toString());
     }
 }
