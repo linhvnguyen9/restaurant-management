@@ -102,14 +102,14 @@ public class EmployeesDao {
     public void updateEmployee(Employee employee, int id) throws SQLException {
         //update employee
 
-        String updateEmployees = "UPDATE employee SET type=?,salary=? WHERE id_employee=?;";
+        String updateEmployees = "UPDATE employee SET type=?,id_manager = ?,salary=? WHERE id_employee=?;";
         PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
 
         pstmt.setString(1, employee.getEmployeeType().toString());
 
-        //pstmt.setInt(2, employee.getManagerId());
-        pstmt.setDouble(2, employee.getBaseSalary());
-        pstmt.setInt(3, id);
+        pstmt.setInt(2, employee.getManagerId());
+        pstmt.setDouble(3, employee.getBaseSalary());
+        pstmt.setInt(4, id);
         System.out.println(pstmt.toString());
         pstmt.executeUpdate();
 
@@ -153,10 +153,6 @@ public class EmployeesDao {
         PreparedStatement pstmtPerson = stament.prepareStatement(deletePerson);
         pstmtPerson.setInt(1, id);
         pstmtPerson.executeUpdate();
-
-
-
-
     }
 
 
