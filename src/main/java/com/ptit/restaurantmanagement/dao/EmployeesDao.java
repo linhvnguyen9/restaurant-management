@@ -23,12 +23,13 @@ public class EmployeesDao {
     }
 
     public int insertEmployee(Employee employee) throws SQLException {
-        int personId = personDao.insertPerson(employee);
-
         String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
 
         PreparedStatement preparedStatement = stament.prepareStatement(createEmployee);
+
+        int personId = personDao.insertPerson(employee);
         preparedStatement.setInt(1, personId);
+
         preparedStatement.setString(2, employee.getEmployeeType().toString());
 
         int employeeMamangerId = employee.getManagerId();
@@ -52,24 +53,7 @@ public class EmployeesDao {
             PreparedStatement ps = stament.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = (rs.getInt("id_employee"));
-                String name = (rs.getString("name"));
-
-                Calendar dob = Calendar.getInstance();
-                dob.setTime(rs.getDate("dob"));
-
-                String address = (rs.getString("addr"));
-                EmployeeType employeeType;
-                if (rs.getString("type").equals("MANAGER")) {
-                    employeeType = EmployeeType.MANAGER;
-                }
-                else {
-                    employeeType = EmployeeType.NORMAL;
-                }
-                int managerId = rs.getInt("id_manager");
-                double salary = rs.getDouble("salary");
-                Employee s = new Employee(id, name, dob, address, employeeType, managerId, salary);
-                listEmployee.add(s);
+                listEmployee.add(employeeFromResultSet(rs));
             }
             return listEmployee;
         } catch (Exception e) {
@@ -111,8 +95,12 @@ public class EmployeesDao {
         ResultSet rs = pstmEmployee.executeQuery();
         rs.next();
 
-        int employeeId = (rs.getInt("id_person"));
-        String name = (rs.getString("name"));
+        return employeeFromResultSet(rs);
+    }
+
+    private Employee employeeFromResultSet(ResultSet rs) throws SQLException {
+        int employeeId = rs.getInt("id_person");
+        String name = rs.getString("name");
 
         Calendar dob = Calendar.getInstance();
         dob.setTime(rs.getDate("dob"));
