@@ -66,7 +66,7 @@ public class EmployeesDaoTest {
     }
     @Test
     public void UpdateEmployee() {
-        Employee employee = new Employee("Update2222", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 9999.9);
+        Employee employee = new Employee("Update2222", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 99956459.9);
         try {
             dao.updateEmployee(employee,5);
         } catch (SQLException e){
@@ -76,31 +76,9 @@ public class EmployeesDaoTest {
     @Test
     public void deleteEmployee() {
         try {
-            dao.deleteEmployee(4);
+            dao.deleteEmployee(14);
         } catch (SQLException e){
             e.printStackTrace();
         }
     }
-    @Test
-    public void insertCustomer() {
-        Customer customer = new Customer("Nguyen Van lInh", Calendar.getInstance(), "Ha Noi", CustomerType.NORMAL);
-        try {
-            customerDao.insertCustomer(customer);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    @Test
-    public void getListCustomer(){
-        customerDao.getListCustomer();
-    }
-    @Test
-    public void deleteCustomer(){
-        try {
-            customerDao.deleteCustomer(4);
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
 }

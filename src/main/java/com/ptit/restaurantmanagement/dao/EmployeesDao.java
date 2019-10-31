@@ -14,6 +14,7 @@ import java.util.Date;
 public class EmployeesDao {
     private Statement statement;
     private Connection stament = RestaurantManagementDatabase.getConnection();
+    private PersonDao personDao = new PersonDao();
     ArrayList<Employee> listEmployee = new ArrayList<>();
 
     public EmployeesDao() throws SQLException {
@@ -22,30 +23,11 @@ public class EmployeesDao {
     }
 
     public int insertEmployee(Employee employee) throws SQLException {
-        String createPerson = "INSERT INTO person VALUES (0, ?, ?, ?)";
-
-        PreparedStatement preparedStatement = stament.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, employee.getName());
-
-        Date utilDate = employee.getDob().getTime();
-        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-
-        preparedStatement.setDate(2, sqlDate);
-        preparedStatement.setString(3, employee.getAddress());
-
-        int personId = preparedStatement.executeUpdate();
-        if (personId != -1) {
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                personId = resultSet.getInt(1);
-            }
-        } else {
-            throw new SQLException();
-        }
+        int personId = personDao.insertPerson(employee);
 
         String createEmployee = "INSERT INTO employee VALUES(?, ?, ?, ?)";
 
-        preparedStatement = stament.prepareStatement(createEmployee);
+        PreparedStatement preparedStatement = stament.prepareStatement(createEmployee);
         preparedStatement.setInt(1, personId);
         preparedStatement.setString(2, employee.getEmployeeType().toString());
 
@@ -64,7 +46,7 @@ public class EmployeesDao {
     }
 
     public ArrayList<Employee> getListEmployee() {
-        String sql = "SELECT * FROM testdb.person,testdb.employee WHERE id_person = id_employee;";
+        String sql = "SELECT * FROM person,employee WHERE id_person = id_employee;";
 
         try {
             PreparedStatement ps = stament.prepareStatement(sql);
@@ -100,14 +82,18 @@ public class EmployeesDao {
     }
 
     public void updateEmployee(Employee employee, int id) throws SQLException {
-        //update employee
-
         String updateEmployees = "UPDATE employee SET type=?,id_manager = ?,salary=? WHERE id_employee=?;";
         PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
 
         pstmt.setString(1, employee.getEmployeeType().toString());
 
-        pstmt.setInt(2, employee.getManagerId());
+        int employeeManagerId = employee.getManagerId();
+        if (employeeManagerId == -1) {
+            pstmt.setNull(2, Types.INTEGER);
+        } else {
+            pstmt.setInt(2, employeeManagerId);
+        }
+
         pstmt.setDouble(3, employee.getBaseSalary());
         pstmt.setInt(4, id);
         System.out.println(pstmt.toString());
@@ -128,19 +114,6 @@ public class EmployeesDao {
 
         System.out.println(pstmt2.toString());
         pstmt2.executeUpdate();
-
-
-
-        boolean autoCommit = stament.getAutoCommit();
-        try {
-            stament.setAutoCommit(false);
-
-            stament.commit();
-        } catch (SQLException exc) {
-            stament.rollback();
-        } finally {
-            stament.setAutoCommit(autoCommit);
-        }
     }
 
     public void deleteEmployee(int id) throws SQLException {
