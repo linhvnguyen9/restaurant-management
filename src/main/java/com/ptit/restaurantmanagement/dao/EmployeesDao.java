@@ -87,7 +87,7 @@ public class EmployeesDao {
         personDao.deletePerson(id);
     }
 
-    public Employee searchListEmployee(int id) throws SQLException {
+    public Employee getEmployeesById(int id) throws SQLException {
         String search = "select * from person,employee where id_person=id_employee and id_employee=?;";
         PreparedStatement pstmEmployee = stament.prepareStatement(search);
         pstmEmployee.setInt(1, id);
@@ -96,6 +96,20 @@ public class EmployeesDao {
         rs.next();
 
         return employeeFromResultSet(rs);
+    }
+
+    public ArrayList<Employee> getEmployeesByName(String name) throws SQLException {
+        String search = String.format("SELECT * FROM person,employee WHERE id_person=id_employee AND name LIKE '%%%s%%'", name);
+        Statement statement = stament.createStatement();
+
+        ResultSet rs = statement.executeQuery(search);
+
+        ArrayList<Employee> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(employeeFromResultSet(rs));
+        }
+
+        return result;
     }
 
     private Employee employeeFromResultSet(ResultSet rs) throws SQLException {

@@ -2,8 +2,6 @@ package com.ptit.restaurantmanager.database;
 
 import com.ptit.restaurantmanagement.dao.CustomerDao;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
-import com.ptit.restaurantmanagement.domain.model.Customer;
-import com.ptit.restaurantmanagement.domain.model.CustomerType;
 import com.ptit.restaurantmanagement.domain.model.Employee;
 import com.ptit.restaurantmanagement.domain.model.EmployeeType;
 import org.junit.jupiter.api.BeforeAll;
@@ -58,7 +56,18 @@ public class EmployeesDaoTest {
     @Test
     public void searchEmployee() {
         try {
-            System.out.println(dao.searchListEmployee(3));
+            System.out.println(dao.getEmployeesById(10));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void searchEmployeeByName() {
+        try {
+            for (Employee employee : dao.getEmployeesByName("L")) {
+                System.out.println(employee);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
