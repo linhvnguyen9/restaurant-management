@@ -1,6 +1,5 @@
 package com.ptit.restaurantmanager.database;
 
-import com.ptit.restaurantmanagement.dao.CustomerDao;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
 import com.ptit.restaurantmanagement.domain.model.Employee;
 import com.ptit.restaurantmanagement.domain.model.EmployeeType;
@@ -12,13 +11,11 @@ import java.util.Calendar;
 
 public class EmployeesDaoTest {
     private static EmployeesDao dao;
-    private static CustomerDao  customerDao;
 
     @BeforeAll
     public static void init() {
         try {
             dao = new EmployeesDao();
-            customerDao=new CustomerDao();
         } catch (SQLException e) {
             e.printStackTrace();
         }
