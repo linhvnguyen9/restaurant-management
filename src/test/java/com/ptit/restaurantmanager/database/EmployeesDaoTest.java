@@ -72,7 +72,7 @@ public class EmployeesDaoTest {
 
     @Test
     public void updateEmployee() {
-        Employee employee = new Employee("Update22eewwwe22", Calendar.getInstance(), "Hanoi34234Update", "19001296", EmployeeType.NORMAL, null, 99956459.9);
+        Employee employee = new Employee("Update22eewwwe22", Calendar.getInstance(), "Hanoi34234Update", "19001299", EmployeeType.NORMAL, null, 99956459.9);
         try {
             dao.updateEmployee(employee,3);
         } catch (SQLException e){
