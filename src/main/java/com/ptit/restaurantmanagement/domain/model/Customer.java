@@ -6,17 +6,15 @@ public class Customer extends Person {
     private CustomerType customerType;
     //View to select customer type should be a drop down list / checkbox
 
-    public Customer(int id, String name, Calendar dob, String address, CustomerType customerType) {
-        super(id, name, dob, address);
+    public Customer(int id, String name, Calendar dob, String address, String phoneNumber, CustomerType customerType) {
+        super(id, name, dob, address, phoneNumber);
         this.customerType = customerType;
     }
 
-    public Customer(String name, Calendar dob, String address, CustomerType customerType) {
-        super(name, dob, address);
+    public Customer(String name, Calendar dob, String address, String phoneNumber, CustomerType customerType) {
+        super(name, dob, address, phoneNumber);
         this.customerType = customerType;
     }
-
-   
 
     public CustomerType getCustomerType() {
         return customerType;
@@ -27,7 +25,7 @@ public class Customer extends Person {
     }
     public Object[] toObjects(){
         return new Object[]{
-            getId(), getName(), getCustomerType(),getFormattedDob(), getAddress() ,getPhoneNumbersString()
+            getId(), getName(), getCustomerType(),getFormattedDob(), getAddress() ,getPhoneNumber()
         };
     }
 }

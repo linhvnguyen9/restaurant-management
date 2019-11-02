@@ -2,28 +2,28 @@ package com.ptit.restaurantmanagement.domain.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class Person {
     private Integer id = 0;
     private String name;
     private Calendar dob; //nullable
     private String address; //nullable
-    private ArrayList<String> phoneNumbers = new ArrayList<>();
+    private String phoneNumber; //nullable
 
-    public Person(Integer id, String name, Calendar dob, String address) {
+    public Person(Integer id, String name, Calendar dob, String address, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.dob = dob;
         this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
-    public Person(String name, Calendar dob, String address) {
+    public Person(String name, Calendar dob, String address, String phoneNumber) {
         this.name = name;
         this.dob = dob;
         this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public Person(String name) {
@@ -74,33 +74,16 @@ public class Person {
         this.address = address;
     }
 
-    //TODO: Test phone number feature
-
-    public void addPhoneNumber(String phoneNumber) {
-        phoneNumbers.add(phoneNumber);
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public List<String> getPhoneNumbers() {
-        return phoneNumbers;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public String getPhoneNumbersString() {
-        StringBuilder builder = new StringBuilder();
-
-        for (String phoneNumber : phoneNumbers) {
-            builder.append(phoneNumber).append(" ");
-        }
-
-        return builder.toString();
-    }
-
-    public void updatePhoneNumber(String newPhoneNumber, String oldPhoneNumber) {
-        int oldPhoneNumberIndex = phoneNumbers.indexOf(oldPhoneNumber);
-        phoneNumbers.set(oldPhoneNumberIndex, newPhoneNumber);
-    }
-
-    public void removePhoneNumber(String phoneNumber) {
-        phoneNumbers.remove(phoneNumber);
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -110,7 +93,7 @@ public class Person {
                 ", name='" + name + '\'' +
                 ", dob=" + dob +
                 ", address='" + address + '\'' +
-                ", phoneNumbers=" + phoneNumbers +
+                ", phoneNumbers=" + phoneNumber +
                 '}';
     }
 }

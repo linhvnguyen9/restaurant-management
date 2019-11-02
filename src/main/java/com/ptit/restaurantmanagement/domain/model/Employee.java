@@ -8,15 +8,15 @@ public class Employee extends Person {
     private double baseSalary;
     private TimeSheet timeSheet = new TimeSheet();
 
-    public Employee(int id, String name, Calendar dob, String address, EmployeeType employeeType, Integer managerId, Double baseSalary) {
-        super(id, name, dob, address);
+    public Employee(int id, String name, Calendar dob, String address, String phoneNumber, EmployeeType employeeType, Integer managerId, Double baseSalary) {
+        super(id, name, dob, address, phoneNumber);
         this.employeeType = employeeType;
         this.managerId = managerId;
         this.baseSalary = baseSalary;
     }
 
-    public Employee(String name, Calendar dob, String address, EmployeeType employeeType, Integer managerId, Double baseSalary) {
-        super(name, dob, address);
+    public Employee(String name, Calendar dob, String address, String phoneNumber, EmployeeType employeeType, Integer managerId, Double baseSalary) {
+        super(name, dob, address, phoneNumber);
         this.employeeType = employeeType;
         this.managerId = managerId;
         this.baseSalary = baseSalary;
@@ -65,7 +65,7 @@ public class Employee extends Person {
     
     public Object[] toObject() {
         return new Object[]{
-                getId(), getName(), getFormattedDob(), getAddress(), getEmployeeType(), getPhoneNumbersString(),
+                getId(), getName(), getFormattedDob(), getAddress(), getEmployeeType(), getPhoneNumber(),
                 managerId, baseSalary
         };
     }
