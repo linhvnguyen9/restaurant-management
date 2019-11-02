@@ -1,11 +1,8 @@
 package com.ptit.restaurantmanager.database;
 
 import com.ptit.restaurantmanagement.dao.CustomerDao;
-import com.ptit.restaurantmanagement.dao.EmployeesDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +23,7 @@ public class CustomerDaoTest {
 
     @Test
     public void insertCustomer() {
-        Customer customer = new Customer("Nguyen Van lInh", Calendar.getInstance(), "Ha Noi", CustomerType.NORMAL);
+        Customer customer = new Customer("Nguyen Van lInh", Calendar.getInstance(), "Ha Noi", "19001296", CustomerType.NORMAL);
         try {
             customerDao.insertCustomer(customer);
         } catch (SQLException e) {

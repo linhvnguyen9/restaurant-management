@@ -23,7 +23,7 @@ public class EmployeesDaoTest {
 
     @Test
     public int insertEmployeeWithNullManagerId() {
-        Employee employee = new Employee("Linh", Calendar.getInstance(), "Hanoi", EmployeeType.NORMAL, null, 30.2);
+        Employee employee = new Employee("Linh", Calendar.getInstance(), "Hanoi", "19001296", EmployeeType.NORMAL, null, 30.2);
         try {
             return dao.insertEmployee(employee);
         } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class EmployeesDaoTest {
     public void insertEmployee() {
         int managerId = insertEmployeeWithNullManagerId();
 
-        Employee employee = new Employee("Long", Calendar.getInstance(), "Ha Noi", EmployeeType.NORMAL, managerId, 90.0);
+        Employee employee = new Employee("Long", Calendar.getInstance(), "Ha Noi", "19001296", EmployeeType.NORMAL, managerId, 90.0);
         try {
             dao.insertEmployee(employee);
         } catch (SQLException e) {
@@ -53,7 +53,7 @@ public class EmployeesDaoTest {
     @Test
     public void searchEmployee() {
         try {
-            System.out.println(dao.getEmployeesById(10));
+            System.out.println(dao.getEmployeesById(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,7 +72,7 @@ public class EmployeesDaoTest {
 
     @Test
     public void updateEmployee() {
-        Employee employee = new Employee("Update22eewwwe22", Calendar.getInstance(), "Hanoi34234Update", EmployeeType.NORMAL, null, 99956459.9);
+        Employee employee = new Employee("Update22eewwwe22", Calendar.getInstance(), "Hanoi34234Update", "19001296", EmployeeType.NORMAL, null, 99956459.9);
         try {
             dao.updateEmployee(employee,3);
         } catch (SQLException e){
@@ -83,7 +83,7 @@ public class EmployeesDaoTest {
     @Test
     public void deleteEmployee() {
         try {
-            dao.deleteEmployee(6);
+            dao.deleteEmployee(2);
         } catch (SQLException e){
             e.printStackTrace();
         }

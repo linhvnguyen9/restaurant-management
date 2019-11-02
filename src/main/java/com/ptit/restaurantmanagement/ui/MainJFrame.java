@@ -5,15 +5,10 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
-import com.ptit.restaurantmanagement.domain.model.Customer;
-import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-import com.ptit.restaurantmanagement.domain.model.MenuEntry;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import com.ptit.restaurantmanagement.domain.model.*;
 
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -86,11 +81,8 @@ public class MainJFrame extends javax.swing.JFrame {
 
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
-        Employee employee = new Employee(name, calendar, address, employeeType, managerId, baseSalary);
-        employee.addPhoneNumber(phone);
+        Employee employee = new Employee(name, calendar, address, phone, employeeType, managerId, baseSalary);
 
-       
-       
         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
         dtmEmployee.addRow(employee.toObject());
     }
@@ -106,10 +98,8 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());
-         Customer customer = new Customer(name, calendar, address, customerType);
+         Customer customer = new Customer(name, calendar, address, phone, customerType);
 
-        customer.addPhoneNumber(phone);
-       
         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
         dtmCustomer.addRow(customer.toObjects());
  

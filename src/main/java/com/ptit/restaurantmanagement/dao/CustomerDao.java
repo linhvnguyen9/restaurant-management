@@ -3,9 +3,6 @@ package com.ptit.restaurantmanagement.dao;
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,13 +47,15 @@ public class CustomerDao {
                 Calendar dob = Calendar.getInstance();
                 dob.setTime(rs.getDate("dob"));
 
+                String phone = rs.getString("phone_number");
+
                 String address = (rs.getString("addr"));
                 CustomerType type;
                 if (rs.getString("type").equals("NORMAL"))
                     type = CustomerType.NORMAL;
                 else
                     type = CustomerType.VIP;
-                Customer s = new Customer(id, name, dob, address, type);
+                Customer s = new Customer(id, name, dob, phone, address, type);
                 listCustomer.add(s);
 
                 for (int i = 0; i < listCustomer.size(); i++)

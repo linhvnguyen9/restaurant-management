@@ -41,7 +41,9 @@ public class RestaurantManagementDatabase {
                 "id_person int auto_increment primary key not null,"+
                 "name varchar(255) not null,"+
                 "dob date,"+
-                "addr varchar(255))";
+                "addr varchar(255)," +
+                "phone_number varchar(20)" +
+                ")";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
