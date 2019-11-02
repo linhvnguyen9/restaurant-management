@@ -5,17 +5,34 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 public class EmployeeAddDialog extends javax.swing.JDialog {
-    private MainJFrame mainJFrame;
-    /**
-     * Creates new form EmployeeAddDialog
-     */
+    private MainJFrame mainJFrame = new MainJFrame();
+
+
+    
+    
+       
     public EmployeeAddDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         mainJFrame = (MainJFrame)parent;
         initComponents();
+        
+        //To edit dialog center screen.
            Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width/2 - getWidth() /2 , size.height/2 - getHeight()/2 );
+    }
+    
+    
+    public void setTextFields (String name,String DOB, String address, String phone,
+                                String type,int managerID, double Salary) {
+        TextFieldEmployeeAddName.setText(name);
+        TextFieldEmployeeAddDOB.setText(DOB);
+        TextFieldEmployeeAddAddress.setText(address);
+        TextFieldEmployeeAddPhoneNumber.setText(phone);
+        ComboBoxTypeEmployee.setSelectedItem(type);
+        TextFieldEmployeeManagerID.setText(String.valueOf(managerID));
+        TextFieldEmployeeSalary.setText(String.valueOf(Salary));
+
     }
 
     /**
@@ -85,6 +102,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         TextFieldEmployeeSalary = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         TextFieldEmployeeManagerID = new javax.swing.JTextField();
+        btEmployeeEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -102,7 +120,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Add & Edit Employee");
 
-        btEmployeeOK.setText("OK");
+        btEmployeeOK.setText("Add");
         btEmployeeOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btEmployeeOKActionPerformed(evt);
@@ -111,46 +129,53 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
 
         jLabel6.setText("Type:");
 
-        ComboBoxTypeEmployee.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Normal", "Manager", " "}));
+        ComboBoxTypeEmployee.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Normal", "Manager", " " }));
 
         jLabel7.setText("Salary:");
 
         jLabel8.setText("Manager ID:");
+
+        btEmployeeEdit.setText("Edit");
+        btEmployeeEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEmployeeEditActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                    .addGap(98, 98, 98)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                            .addGap(25, 25, 25)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(35, 35, 35)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                            .addGap(12, 12, 12)
-                                            .addComponent(btEmployeeOK, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(TextFieldEmployeeAddDOB)
-                                                    .addComponent(TextFieldEmployeeAddAddress)
-                                                    .addComponent(TextFieldEmployeeAddPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                                                    .addComponent(TextFieldEmployeeAddName)
-                                                    .addComponent(TextFieldEmployeeManagerID)
-                                                    .addComponent(TextFieldEmployeeSalary)
-                                                    .addComponent(ComboBoxTypeEmployee, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addContainerGap())))
+                .addGap(98, 98, 98)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(TextFieldEmployeeAddDOB)
+                    .addComponent(TextFieldEmployeeAddAddress)
+                    .addComponent(TextFieldEmployeeAddPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                    .addComponent(TextFieldEmployeeAddName)
+                    .addComponent(TextFieldEmployeeManagerID)
+                    .addComponent(TextFieldEmployeeSalary)
+                    .addComponent(ComboBoxTypeEmployee, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btEmployeeOK, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btEmployeeEdit)
+                .addGap(86, 86, 86))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,30 +193,32 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(1, 1, 1)
-                            .addComponent(TextFieldEmployeeAddDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TextFieldEmployeeAddAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TextFieldEmployeeAddPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 27, Short.MAX_VALUE))
+                        .addComponent(TextFieldEmployeeAddDOB, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TextFieldEmployeeAddAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ComboBoxTypeEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TextFieldEmployeeAddPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ComboBoxTypeEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(TextFieldEmployeeManagerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(TextFieldEmployeeManagerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(TextFieldEmployeeSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(TextFieldEmployeeSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btEmployeeOK)
-                    .addGap(9, 9, 9))
+                    .addComponent(btEmployeeEdit))
+                .addGap(9, 9, 9))
         );
 
         pack();
@@ -199,6 +226,7 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
 
     private void btEmployeeOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeOKActionPerformed
         
+  
         String name = TextFieldEmployeeAddName.getText();
         String DOB = TextFieldEmployeeAddDOB.getText();
         String address = TextFieldEmployeeAddAddress.getText();
@@ -206,21 +234,34 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         String type = ComboBoxTypeEmployee.getSelectedItem().toString();
         double salary = Double.parseDouble(TextFieldEmployeeSalary.getText());
         int managerID = Integer.parseInt(TextFieldEmployeeManagerID.getText());
-
+        
         mainJFrame.addRowEmployee(name,DOB, address, type, phone, managerID, salary);
-
-        this.dispose();
         
     }//GEN-LAST:event_btEmployeeOKActionPerformed
 
+    private void btEmployeeEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeEditActionPerformed
+        int row = mainJFrame.TableEmployee.getSelectedRow();
+        
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeAddName.getText(),row, 1);
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeAddDOB.getText(),row, 2);
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeAddAddress.getText(),row, 3);
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeAddPhoneNumber.getText(),row, 4);
+        mainJFrame.TableEmployee.setValueAt(ComboBoxTypeEmployee.getSelectedItem(),row, 5);
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeManagerID.getText(),row, 6);
+        mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeSalary.getText(),row, 7);
+        
+        
+    }//GEN-LAST:event_btEmployeeEditActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox ComboBoxTypeEmployee;
-    private javax.swing.JTextField TextFieldEmployeeAddAddress;
-    private javax.swing.JTextField TextFieldEmployeeAddDOB;
-    private javax.swing.JTextField TextFieldEmployeeAddName;
-    private javax.swing.JTextField TextFieldEmployeeAddPhoneNumber;
-    private javax.swing.JTextField TextFieldEmployeeManagerID;
-    private javax.swing.JTextField TextFieldEmployeeSalary;
+    public javax.swing.JComboBox ComboBoxTypeEmployee;
+    public javax.swing.JTextField TextFieldEmployeeAddAddress;
+    public javax.swing.JTextField TextFieldEmployeeAddDOB;
+    public javax.swing.JTextField TextFieldEmployeeAddName;
+    public javax.swing.JTextField TextFieldEmployeeAddPhoneNumber;
+    public javax.swing.JTextField TextFieldEmployeeManagerID;
+    public javax.swing.JTextField TextFieldEmployeeSalary;
+    private javax.swing.JButton btEmployeeEdit;
     private javax.swing.JButton btEmployeeOK;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -109,11 +109,11 @@ public class MainJFrame extends javax.swing.JFrame {
          Customer customer = new Customer(name, calendar, address, customerType);
 
         customer.addPhoneNumber(phone);
-
        
-        
         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
         dtmCustomer.addRow(customer.toObjects());
+ 
+       
     }
      public void addRowMenu(int id, String name, double price){
          MenuEntry menuEntry = new MenuEntry(id, name, price);
@@ -122,7 +122,6 @@ public class MainJFrame extends javax.swing.JFrame {
          dtmMenuEntry.addRow(menuEntry.toObjects());
          
      }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -137,7 +136,6 @@ public class MainJFrame extends javax.swing.JFrame {
         btEmployeeAdd = new javax.swing.JButton();
         btEmployeeEdit = new javax.swing.JButton();
         btEmployeeRemove = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         PanelCustomer = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -219,10 +217,6 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Options");
-
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Options");
@@ -253,11 +247,6 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEmployeeLayout.createSequentialGroup()
                         .addComponent(btEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23))))
-            .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(PanelEmployeeLayout.createSequentialGroup()
-                    .addGap(350, 350, 350)
-                    .addComponent(jLabel5)
-                    .addContainerGap(350, Short.MAX_VALUE)))
         );
         PanelEmployeeLayout.setVerticalGroup(
             PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,11 +268,6 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
-            .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(PanelEmployeeLayout.createSequentialGroup()
-                    .addGap(233, 233, 233)
-                    .addComponent(jLabel5)
-                    .addContainerGap(233, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("Employee", PanelEmployee);
@@ -306,6 +290,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btCustomerEdit.setText("Edit");
+        btCustomerEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCustomerEditActionPerformed(evt);
+            }
+        });
 
         btCustomerSearch.setText("Search");
         btCustomerSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -495,6 +484,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btMenuEdit.setText("Edit");
+        btMenuEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMenuEditActionPerformed(evt);
+            }
+        });
 
         btMenuRemove.setText("Remove");
         btMenuRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -573,12 +567,12 @@ public class MainJFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+   
     private void btEmployeeEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeEditActionPerformed
-      EmployeeAddDialog employeeAddDialog = new EmployeeAddDialog(this, true);
-      employeeAddDialog.setVisible(true);
-      
-      
+
+          EmployeeAddDialog employeeAddDialog = new EmployeeAddDialog(this, true);
+          employeeAddDialog.setVisible(true);
+            
     }//GEN-LAST:event_btEmployeeEditActionPerformed
 
     private void btEmployeeRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeRemoveActionPerformed
@@ -671,15 +665,28 @@ public class MainJFrame extends javax.swing.JFrame {
           
     }//GEN-LAST:event_btMenuRemoveActionPerformed
 
+    private void btCustomerEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerEditActionPerformed
+        CustomerAddDialog customerAddDialog = new CustomerAddDialog(this, true);
+        customerAddDialog.setVisible(true);
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btCustomerEditActionPerformed
+
+    private void btMenuEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuEditActionPerformed
+        MenuAddDialog menuAddDialog = new  MenuAddDialog(this,true);
+        menuAddDialog.setVisible(true);
+   
+    }//GEN-LAST:event_btMenuEditActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable InvoiceTable;
     private javax.swing.JPanel PanelCustomer;
     private javax.swing.JPanel PanelEmployee;
     private javax.swing.JPanel PanelInvoice;
     private javax.swing.JPanel PanelMenu;
-    private javax.swing.JTable TableCustomer;
-    private javax.swing.JTable TableEmployee;
-    private javax.swing.JTable TableMenu;
+    public javax.swing.JTable TableCustomer;
+    public javax.swing.JTable TableEmployee;
+    public javax.swing.JTable TableMenu;
     private javax.swing.JButton btCustomerAdd;
     private javax.swing.JButton btCustomerEdit;
     private javax.swing.JButton btCustomerRemove;
@@ -704,7 +711,6 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
