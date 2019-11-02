@@ -27,6 +27,7 @@ public class RestaurantManagementDatabase {
             createCustomerTable((connection));
             createMenuEntryTable(connection);
             createInvoiceTable(connection);
+            createTimesheetTable(connection);
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -39,9 +40,9 @@ public class RestaurantManagementDatabase {
 
     private static void createPersonTable(Connection connection) throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS person (" +
-                "id_person int auto_increment primary key not null,"+
-                "name varchar(255) not null,"+
-                "dob date,"+
+                "id_person int auto_increment primary key not null," +
+                "name varchar(255) not null," +
+                "dob date," +
                 "addr varchar(255)," +
                 "phone_number varchar(20)" +
                 ")";
@@ -49,24 +50,26 @@ public class RestaurantManagementDatabase {
         Statement statement = connection.createStatement();
         statement.execute(query);
     }
+
     private static void createEmployeesTable(Connection connection) throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS employee" +
                 "(id_employee int AUTO_INCREMENT, " +
-                "type varchar(255) not null,"+
-                "id_manager int ,"+
-                "salary double not null, "+
-                "primary key ( id_employee),"+
-                "foreign key (id_manager) references employee(id_employee) ON DELETE CASCADE,"+
+                "type varchar(255) not null," +
+                "id_manager int ," +
+                "salary double not null, " +
+                "primary key ( id_employee)," +
+                "foreign key (id_manager) references employee(id_employee) ON DELETE CASCADE," +
                 "foreign key (id_employee) references person(id_person) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
     }
+
     private static void createCustomerTable(Connection connection) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS customer"+
-                "(id_customer int not null,"+
-                "type varchar(255) not null,"+
-                "primary key(id_customer),"+
+        String query = "CREATE TABLE IF NOT EXISTS customer" +
+                "(id_customer int not null," +
+                "type varchar(255) not null," +
+                "primary key(id_customer)," +
                 "foreign key (id_customer) references person(id_person))";
 
         Statement statement = connection.createStatement();
@@ -74,10 +77,10 @@ public class RestaurantManagementDatabase {
     }
 
     private static void createMenuEntryTable(Connection connection) throws SQLException {
-        String query = "CREATE TABLE IF NOT EXISTS menu_entry("+
-                "id_menu_entry int auto_increment not null,"+
-                "name varchar(255) not null,"+
-                "price double not null,"+
+        String query = "CREATE TABLE IF NOT EXISTS menu_entry(" +
+                "id_menu_entry int auto_increment not null," +
+                "name varchar(255) not null," +
+                "price double not null," +
                 "primary key( id_menu_entry))";
 
         Statement statement = connection.createStatement();
@@ -93,6 +96,20 @@ public class RestaurantManagementDatabase {
                 "PRIMARY KEY (id_invoice)," +
                 "FOREIGN KEY (id_customer) REFERENCES customer(id_customer) ON DELETE CASCADE," +
                 "FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE" +
+                ")";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+
+    private static void createTimesheetTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS timesheet (" +
+                "id_employee INT NOT NULL," +
+                "month INT NOT NULL," +
+                "year INT NOT NULL," +
+                "workdays INT NOT NULL," +
+                "PRIMARY KEY (id_employee, month, year)," +
+                "FOREIGN KEY (id_employee) REFERENCES employee(id_employee)" +
                 ")";
 
         Statement statement = connection.createStatement();
