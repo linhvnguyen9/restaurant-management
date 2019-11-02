@@ -9,6 +9,7 @@ public class RestaurantManagementDatabase {
     public static final String DATABASENAME = "testDb";
     public static final String USER = "root";
     public static final String PASS = "";
+    public static final String BASEURL = "jdbc:mysql://localhost:3306/" + DATABASENAME;
 
     public static void createDatabase(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -23,6 +24,8 @@ public class RestaurantManagementDatabase {
             createDatabase(connection);
             createPersonTable(connection);
             createEmployeesTable(connection);
+            createCustomerTable((connection));
+            createMenuEntryTable(connection);
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -50,13 +53,32 @@ public class RestaurantManagementDatabase {
                 "id_manager int ,"+
                 "salary double not null, "+
                 "primary key ( id_employee),"+
-                "foreign key (id_manager) references employee(id_employee),"+
-                "foreign key (id_employee) references person(id_person))";
+                "foreign key (id_manager) references employee(id_employee) ON DELETE CASCADE,"+
+                "foreign key (id_employee) references person(id_person) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
     }
+    private static void createCustomerTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS customer"+
+                "(id_customer int not null,"+
+                "type varchar(255) not null,"+
+                "primary key(id_customer),"+
+                "foreign key (id_customer) references person(id_person))";
 
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createMenuEntryTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS menu_entry("+
+                "id_menu_entry int auto_increment not null,"+
+                "name varchar(255) not null,"+
+                "price double not null,"+
+                "primary key( id_menu_entry))";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
     public static void main(String[] args) {
         getConnection();
     }

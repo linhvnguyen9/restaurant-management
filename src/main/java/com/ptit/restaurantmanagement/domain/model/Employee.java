@@ -31,6 +31,8 @@ public class Employee extends Person {
     }
 
     public int getManagerId() {
+        if (managerId == null)
+            return -1;
         return managerId;
     }
 
@@ -66,5 +68,15 @@ public class Employee extends Person {
                 getId(), getName(), getFormattedDob(), getAddress(), getEmployeeType(), getPhoneNumbersString(),
                 managerId, baseSalary
         };
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Employee{" +
+                "employeeType=" + employeeType +
+                ", managerId=" + managerId +
+                ", baseSalary=" + baseSalary +
+                ", timeSheet=" + timeSheet +
+                '}';
     }
 }

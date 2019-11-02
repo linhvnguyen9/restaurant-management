@@ -44,4 +44,13 @@ public class MenuEntry {
             entryId, name, price
         };
     }
+
+    @Override
+    public String toString() {
+        return "MenuEntry{" +
+                "entryId=" + entryId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }
