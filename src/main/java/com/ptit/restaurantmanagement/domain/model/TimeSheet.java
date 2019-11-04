@@ -4,20 +4,67 @@ import java.time.YearMonth;
 import java.util.HashMap;
 
 public class TimeSheet {
-    private HashMap<YearMonth, Integer> workingDays = new HashMap<>();
+    private int employeeId;
+    private int month;
+    private int year;
+    private int workdays;
 
-    public int getWorkdays(int month, int year) {
-        YearMonth query = YearMonth.parse(year + "-" + String.format("%02d", month));
-        return workingDays.get(query);
+    public TimeSheet(int month, int year, int workdays) {
+        this.month = month;
+        this.year = year;
+        this.workdays = workdays;
     }
 
-    public void setWorkdays(int month, int year, int workdays) throws IllegalArgumentException {
-        YearMonth query = YearMonth.parse(year + "-" + String.format("%02d", month));
-        int daysOfMonth = query.lengthOfMonth();
+    public TimeSheet(int employeeId, int month, int year, int workdays) {
+        this.employeeId = employeeId;
+        this.month = month;
+        this.year = year;
+        this.workdays = workdays;
+    }
 
-        if (workdays < 0 || workdays > daysOfMonth)
-            throw new IllegalArgumentException("Invalid workdays count");
+    public int getEmployeeId() {
+        return employeeId;
+    }
 
-        workingDays.put(query, workdays);
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getWorkdays() {
+        return workdays;
+    }
+
+    public void setWorkdays(int workdays) {
+        this.workdays = workdays;
+    }
+
+    @Override
+    public String toString() {
+        return "TimeSheet{" +
+                "employeeId=" + employeeId +
+                ", month=" + month +
+                ", year=" + year +
+                ", workdays=" + workdays +
+                '}';
+    }
+    public Object[] toObject(){
+        return new Object[]{getEmployeeId(),getMonth(),getYear(),getWorkdays()
+        };
     }
 }
