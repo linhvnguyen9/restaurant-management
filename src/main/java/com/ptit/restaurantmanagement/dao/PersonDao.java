@@ -4,7 +4,6 @@ import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
 import com.ptit.restaurantmanagement.domain.model.Person;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class PersonDao {
@@ -17,7 +16,7 @@ public class PersonDao {
     }
 
     int insertPerson(Person person) throws SQLException {
-        String insertPerson = "INSERT INTO person VALUES(0, ?, ?, ?)";
+        String insertPerson = "INSERT INTO person VALUES(0, ?, ?, ?, ?)";
 
         PreparedStatement preparedStatement = connection.prepareStatement(insertPerson, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, person.getName());
@@ -27,6 +26,7 @@ public class PersonDao {
 
         preparedStatement.setDate(2, sqlDate);
         preparedStatement.setString(3, person.getAddress());
+        preparedStatement.setString(4, person.getPhoneNumber());
 
         int personId = preparedStatement.executeUpdate();
         if (personId == 1) {
@@ -42,7 +42,7 @@ public class PersonDao {
     }
 
     void updatePerson(Person person, int id) throws SQLException {
-        String updatePerson = "UPDATE person SET name=?, dob=?, addr=? WHERE id_person=?";
+        String updatePerson = "UPDATE person SET name=?, dob=?, addr=?, phone_number=? WHERE id_person=?";
 
         PreparedStatement preparedStatement = connection.prepareStatement(updatePerson);
 
@@ -53,8 +53,9 @@ public class PersonDao {
 
         preparedStatement.setDate(2, sqlDate);
         preparedStatement.setString(3, person.getAddress());
+        preparedStatement.setString(4, person.getPhoneNumber());
 
-        preparedStatement.setInt(4, id);
+        preparedStatement.setInt(5, id);
 
         preparedStatement.executeUpdate();
     }

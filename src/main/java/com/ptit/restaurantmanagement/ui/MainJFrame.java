@@ -5,6 +5,7 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
+import com.ptit.restaurantmanagement.domain.model.*;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
@@ -16,6 +17,7 @@ import java.awt.Toolkit;
 import java.sql.SQLException;
 
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,17 +92,13 @@ public class MainJFrame extends javax.swing.JFrame {
 
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
-        Employee employee = new Employee(id,name, calendar, address,phone, employeeType, managerId, baseSalary);
-        
-        
+        Employee employee = new Employee(name, calendar, address, phone, employeeType, managerId, baseSalary);
+      
         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
         dtmEmployee.addRow(employee.toObject());
         
         EmployeesDao employeesDao = new EmployeesDao();
         employeesDao.insertEmployee(employee);
-        
-        
-      
     }
     
      public void addRowCustomer(String name, String DOB, String address, 
@@ -114,9 +112,8 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());
-         Customer customer = new Customer(name, calendar, address,phone,customerType);
-
-        
+       
+        Customer customer = new Customer(name, calendar, address, phone, customerType);
        
         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
         dtmCustomer.addRow(customer.toObjects());
