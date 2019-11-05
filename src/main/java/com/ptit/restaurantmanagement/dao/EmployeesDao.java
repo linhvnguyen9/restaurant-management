@@ -1,4 +1,3 @@
-
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;

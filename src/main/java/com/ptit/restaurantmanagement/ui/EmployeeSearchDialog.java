@@ -10,12 +10,10 @@ package com.ptit.restaurantmanagement.ui;
  * @author Viet
  */
 public class EmployeeSearchDialog extends javax.swing.JDialog {
-
-    /**
-     * Creates new form EmployeeSearchDialog
-     */
+    MainJFrame m;
     public EmployeeSearchDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        m = (MainJFrame)parent;
         initComponents();
     }
 
@@ -175,6 +173,12 @@ public class EmployeeSearchDialog extends javax.swing.JDialog {
 
     private void btEmployeeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeSearchActionPerformed
         //TODO: Call function in MainJFrame to update the table with search results
+        int row = m.TableEmployee.getRowCount();
+        for(int i = 0 ; i < row ; i++){
+            if(m.TableEmployee.getValueAt(i, 1).toString().equalsIgnoreCase(TextFieldEmployeeSearch.getText())){
+                
+            }
+        }
         this.dispose();
     }//GEN-LAST:event_btEmployeeSearchActionPerformed
 

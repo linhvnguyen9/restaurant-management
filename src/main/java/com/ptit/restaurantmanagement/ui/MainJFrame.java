@@ -6,6 +6,15 @@
 package com.ptit.restaurantmanagement.ui;
 
 import com.ptit.restaurantmanagement.domain.model.*;
+import com.ptit.restaurantmanagement.dao.EmployeesDao;
+import com.ptit.restaurantmanagement.domain.model.Customer;
+import com.ptit.restaurantmanagement.domain.model.CustomerType;
+import com.ptit.restaurantmanagement.domain.model.Employee;
+import com.ptit.restaurantmanagement.domain.model.EmployeeType;
+import com.ptit.restaurantmanagement.domain.model.MenuEntry;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.sql.SQLException;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -15,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
 
 /**
  * @author Viet
@@ -68,8 +79,8 @@ public class MainJFrame extends javax.swing.JFrame {
      DefaultTableModel dtmEmployee;
      DefaultTableModel dtmCustomer;
      DefaultTableModel dtmMenuEntry;
-    public void addRowEmployee(String name, String DOB, String address, String employeeTypeString,
-                               String phone, Integer managerId, double baseSalary) {
+    public void addRowEmployee(int id,String name, String DOB, String address, String employeeTypeString,
+                               String phone, Integer managerId, double baseSalary) throws SQLException {
         Date dobDate;
         Calendar calendar = Calendar.getInstance();
         try {
@@ -82,9 +93,12 @@ public class MainJFrame extends javax.swing.JFrame {
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
         Employee employee = new Employee(name, calendar, address, phone, employeeType, managerId, baseSalary);
-
+      
         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
         dtmEmployee.addRow(employee.toObject());
+        
+        EmployeesDao employeesDao = new EmployeesDao();
+        employeesDao.insertEmployee(employee);
     }
     
      public void addRowCustomer(String name, String DOB, String address, 
@@ -98,8 +112,9 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());
-         Customer customer = new Customer(name, calendar, address, phone, customerType);
-
+       
+        Customer customer = new Customer(name, calendar, address, phone, customerType);
+       
         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
         dtmCustomer.addRow(customer.toObjects());
  
@@ -127,6 +142,8 @@ public class MainJFrame extends javax.swing.JFrame {
         btEmployeeEdit = new javax.swing.JButton();
         btEmployeeRemove = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextFieldSearchEmployee = new javax.swing.JTextField();
         PanelCustomer = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         TableCustomer = new javax.swing.JTable();
@@ -211,14 +228,27 @@ public class MainJFrame extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Options");
 
+        jLabel5.setText("Search by name:");
+
+        jTextFieldSearchEmployee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldSearchEmployeeActionPerformed(evt);
+            }
+        });
+        jTextFieldSearchEmployee.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldSearchEmployeeKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelEmployeeLayout = new javax.swing.GroupLayout(PanelEmployee);
         PanelEmployee.setLayout(PanelEmployeeLayout);
         PanelEmployeeLayout.setHorizontalGroup(
             PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelEmployeeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelEmployeeLayout.createSequentialGroup()
                         .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,11 +267,17 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEmployeeLayout.createSequentialGroup()
                         .addComponent(btEmployeeView, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23))))
+            .addGroup(PanelEmployeeLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldSearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelEmployeeLayout.setVerticalGroup(
             PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEmployeeLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addGap(25, 25, 25)
                 .addComponent(btEmployeeView)
@@ -255,9 +291,12 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(btEmployeeRemove))
                 .addGap(280, 280, 280))
             .addGroup(PanelEmployeeLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextFieldSearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
         );
 
         jTabbedPane1.addTab("Employee", PanelEmployee);
@@ -359,12 +398,12 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addGroup(PanelCustomerLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
             .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelCustomerLayout.createSequentialGroup()
                     .addGap(233, 233, 233)
                     .addComponent(jLabel3)
-                    .addContainerGap(233, Short.MAX_VALUE)))
+                    .addContainerGap(215, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("Customer", PanelCustomer);
@@ -434,7 +473,7 @@ public class MainJFrame extends javax.swing.JFrame {
             PanelInvoiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelInvoiceLayout.createSequentialGroup()
                 .addGroup(PanelInvoiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                     .addGroup(PanelInvoiceLayout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(jLabel2)
@@ -526,7 +565,7 @@ public class MainJFrame extends javax.swing.JFrame {
             PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMenuLayout.createSequentialGroup()
                 .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                     .addGroup(PanelMenuLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jLabel1)
@@ -667,6 +706,20 @@ public class MainJFrame extends javax.swing.JFrame {
         menuAddDialog.setVisible(true);
    
     }//GEN-LAST:event_btMenuEditActionPerformed
+     public void filterEmployee(String querry){
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dtmEmployee);
+        TableEmployee.setRowSorter(tr);
+        
+        tr.setRowFilter(RowFilter.regexFilter(querry));
+    }
+    private void jTextFieldSearchEmployeeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSearchEmployeeKeyReleased
+        String query = jTextFieldSearchEmployee.getText().toLowerCase();
+        filterEmployee(query);
+    }//GEN-LAST:event_jTextFieldSearchEmployeeKeyReleased
+
+    private void jTextFieldSearchEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchEmployeeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldSearchEmployeeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable InvoiceTable;
@@ -701,11 +754,13 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextFieldSearchEmployee;
     // End of variables declaration//GEN-END:variables
 }

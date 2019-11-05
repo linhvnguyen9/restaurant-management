@@ -22,6 +22,8 @@ public class Employee extends Person {
         this.baseSalary = baseSalary;
     }
 
+
+
     public EmployeeType getEmployeeType() {
         return employeeType;
     }

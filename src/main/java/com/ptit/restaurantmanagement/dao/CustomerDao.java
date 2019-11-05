@@ -42,10 +42,28 @@ public class CustomerDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 listCustomer.add(CustomerFromResultSet(rs));
+                int id = rs.getInt("id_person");
+                String name = (rs.getString("name"));
+
+                Calendar dob = Calendar.getInstance();
+                dob.setTime(rs.getDate("dob"));
+
+                String phone = rs.getString("phone_number");
+
+                String address = (rs.getString("addr"));
+                CustomerType type;
+                if (rs.getString("type").equals("NORMAL"))
+                    type = CustomerType.NORMAL;
+                else
+                    type = CustomerType.VIP;
+                Customer s = new Customer(id, name, dob, phone, address, type);
+                listCustomer.add(s);
+
+                for (int i = 0; i < listCustomer.size(); i++)
+                    System.out.println(listCustomer.get(i).toString());
+
+                return listCustomer;
             }
-            for (int i=0;i<listCustomer.size();i++)
-                System.out.println(listCustomer.get(i).toString());
-            return listCustomer;
         } catch (Exception e) {
             e.printStackTrace();
         }
