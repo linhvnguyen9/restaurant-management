@@ -2,8 +2,17 @@
 package com.ptit.restaurantmanagement.ui;
 
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
+import com.ptit.restaurantmanagement.domain.model.Employee;
+import com.ptit.restaurantmanagement.domain.model.EmployeeType;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EmployeeAddDialog extends javax.swing.JDialog {
     private MainJFrame mainJFrame = new MainJFrame();
@@ -251,7 +260,11 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         double salary = Double.parseDouble(TextFieldEmployeeSalary.getText());
         int managerID = Integer.parseInt(TextFieldEmployeeManagerID.getText());
         
-        mainJFrame.addRowEmployee(id,name,DOB, address, type, phone, managerID, salary);
+        try {
+            mainJFrame.addRowEmployee(id,name,DOB, address, type, phone, managerID, salary);
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
      
     }//GEN-LAST:event_btEmployeeOKActionPerformed
 
@@ -266,7 +279,31 @@ public class EmployeeAddDialog extends javax.swing.JDialog {
         mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeManagerID.getText(),row, 6);
         mainJFrame.TableEmployee.setValueAt(TextFieldEmployeeSalary.getText(),row, 7);
         
+        int id = Integer.parseInt(TextFieldAddID.getText());
+        String name = TextFieldEmployeeAddName.getText();
+        String DOB = TextFieldEmployeeAddDOB.getText();
+        Date dobDate;
+        Calendar calendar = Calendar.getInstance();
+        try {
+            dobDate = new SimpleDateFormat("dd-MM-yyyy").parse(DOB);
+            calendar.setTime(dobDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String address = TextFieldEmployeeAddAddress.getText();
+        String phone = TextFieldEmployeeAddPhoneNumber.getText();
+        String type = ComboBoxTypeEmployee.getSelectedItem().toString();
+        double salary = Double.parseDouble(TextFieldEmployeeSalary.getText());
+        int managerID = Integer.parseInt(TextFieldEmployeeManagerID.getText());
         
+        Employee employee = new Employee(id, name, calendar, address, phone, EmployeeType.MANAGER, managerID, salary);
+        
+        try {
+            EmployeesDao employeesDao = new EmployeesDao();
+            employeesDao.updateEmployee(employee, id);
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btEmployeeEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
