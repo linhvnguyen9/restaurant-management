@@ -5,6 +5,7 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
+import com.ptit.restaurantmanagement.dao.EmployeesDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
 import com.ptit.restaurantmanagement.domain.model.Employee;
@@ -12,6 +13,7 @@ import com.ptit.restaurantmanagement.domain.model.EmployeeType;
 import com.ptit.restaurantmanagement.domain.model.MenuEntry;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 
 import javax.swing.table.DefaultTableModel;
 import java.text.ParseException;
@@ -75,8 +77,8 @@ public class MainJFrame extends javax.swing.JFrame {
      DefaultTableModel dtmEmployee;
      DefaultTableModel dtmCustomer;
      DefaultTableModel dtmMenuEntry;
-    public void addRowEmployee(String name, String DOB, String address, String employeeTypeString,
-                               String phone, Integer managerId, double baseSalary) {
+    public void addRowEmployee(int id,String name, String DOB, String address, String employeeTypeString,
+                               String phone, Integer managerId, double baseSalary) throws SQLException {
         Date dobDate;
         Calendar calendar = Calendar.getInstance();
         try {
@@ -88,13 +90,17 @@ public class MainJFrame extends javax.swing.JFrame {
 
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
-        Employee employee = new Employee(name, calendar, address,phone, employeeType, managerId, baseSalary);
+        Employee employee = new Employee(id,name, calendar, address,phone, employeeType, managerId, baseSalary);
         
-
-       
-       
+        
         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
         dtmEmployee.addRow(employee.toObject());
+        
+        EmployeesDao employeesDao = new EmployeesDao();
+        employeesDao.insertEmployee(employee);
+        
+        
+      
     }
     
      public void addRowCustomer(String name, String DOB, String address, 
@@ -244,8 +250,8 @@ public class MainJFrame extends javax.swing.JFrame {
             PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelEmployeeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelEmployeeLayout.createSequentialGroup()
                         .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,14 +273,14 @@ public class MainJFrame extends javax.swing.JFrame {
             .addGroup(PanelEmployeeLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldSearchEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelEmployeeLayout.setVerticalGroup(
             PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEmployeeLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addGap(25, 25, 25)
                 .addComponent(btEmployeeView)
@@ -288,7 +294,6 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(btEmployeeRemove))
                 .addGap(280, 280, 280))
             .addGroup(PanelEmployeeLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(PanelEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -396,12 +401,12 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addGroup(PanelCustomerLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
             .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelCustomerLayout.createSequentialGroup()
                     .addGap(233, 233, 233)
                     .addComponent(jLabel3)
-                    .addContainerGap(233, Short.MAX_VALUE)))
+                    .addContainerGap(215, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("Customer", PanelCustomer);
@@ -471,7 +476,7 @@ public class MainJFrame extends javax.swing.JFrame {
             PanelInvoiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelInvoiceLayout.createSequentialGroup()
                 .addGroup(PanelInvoiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                     .addGroup(PanelInvoiceLayout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(jLabel2)
@@ -563,7 +568,7 @@ public class MainJFrame extends javax.swing.JFrame {
             PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMenuLayout.createSequentialGroup()
                 .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                     .addGroup(PanelMenuLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jLabel1)
