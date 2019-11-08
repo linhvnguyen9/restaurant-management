@@ -6,7 +6,6 @@ public class Employee extends Person {
     private EmployeeType employeeType;
     private Integer managerId; //nullable
     private double baseSalary;
-    private TimeSheet timeSheet = new TimeSheet();
 
     public Employee(int id, String name, Calendar dob, String address, String phoneNumber, EmployeeType employeeType, Integer managerId, Double baseSalary) {
         super(id, name, dob, address, phoneNumber);
@@ -50,20 +49,7 @@ public class Employee extends Person {
         this.baseSalary = baseSalary;
     }
 
-    public double getSalaryByMonth(int month, int year) {
-        int workingDays = timeSheet.getWorkdays(month, year);
-
-        return workingDays * baseSalary;
-    }
-
-    public TimeSheet getTimeSheet() {
-        return timeSheet;
-    }
-
-    public void setWorkingDays(int month, int year, int workDays) {
-        timeSheet.setWorkdays(month, year, workDays);
-    }
-    
+ 
     
     public Object[] toObject() {
         return new Object[]{
@@ -77,8 +63,7 @@ public class Employee extends Person {
         return super.toString() + "Employee{" +
                 "employeeType=" + employeeType +
                 ", managerId=" + managerId +
-                ", baseSalary=" + baseSalary +
-                ", timeSheet=" + timeSheet +
+                ", baseSalary=" + baseSalary+
                 '}';
     }
 }
