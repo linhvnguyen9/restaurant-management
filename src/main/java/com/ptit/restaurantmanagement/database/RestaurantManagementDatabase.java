@@ -27,6 +27,8 @@ public class RestaurantManagementDatabase {
             createCustomerTable((connection));
             createMenuEntryTable(connection);
             createInvoiceTable(connection);
+            createTimeSheetTable(connection);
+            createLineTable(connection);
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -67,7 +69,7 @@ public class RestaurantManagementDatabase {
                 "(id_customer int not null,"+
                 "type varchar(255) not null,"+
                 "primary key(id_customer),"+
-                "foreign key (id_customer) references person(id_person))";
+                "foreign key (id_customer) references person(id_person) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
@@ -94,6 +96,30 @@ public class RestaurantManagementDatabase {
                 "FOREIGN KEY (id_customer) REFERENCES customer(id_customer) ON DELETE CASCADE," +
                 "FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE" +
                 ")";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createTimeSheetTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS timesheet ("+
+                "id_employee int,"+
+                "month int,"+
+                "year int,"+
+                "workdays int,"+
+                "primary key (id_employee,month,year),"+
+                "foreign key (id_employee) references person(id_person) ON DELETE CASCADE)";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createLineTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS line ("+
+                "id_invoice int,"+
+                "id_menu_entry int,"+
+                "quantity int,"+
+                "primary key (id_invoice,id_menu_entry),"+
+                "foreign key (id_invoice) references invoice(id_invoice)  ON DELETE CASCADE,"+
+                "foreign key (id_menu_entry) references  menu_entry(id_menu_entry) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
