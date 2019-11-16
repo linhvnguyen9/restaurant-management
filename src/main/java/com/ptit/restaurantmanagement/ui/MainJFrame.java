@@ -99,7 +99,9 @@ public class MainJFrame extends javax.swing.JFrame {
         try {
             invoiceDao = new InvoiceDao();
             for (Invoice i : invoiceDao.getInvoices()) {
-                dtmMenuEntry.addRow(i.toObjects());
+                dtmInvoice.addRow(new Object[]{
+                        i.getInvoiceId(), i.getCustomerId() , i.getEmployeeId() , i.getCreationTime() , invoiceDao.calculateInvoiceSum(i.getInvoiceId())
+                });
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
