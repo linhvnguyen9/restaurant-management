@@ -162,6 +162,9 @@ public class MainJFrame extends javax.swing.JFrame {
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
         Employee employee = new Employee(name, calendar, address, phone, employeeType, managerId, baseSalary);
+      
+        dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
+
         EmployeesDao employeesDao = new EmployeesDao();
         int id = employeesDao.insertEmployee(employee);
         employee.setId(id);
@@ -179,8 +182,7 @@ public class MainJFrame extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());
-       
+        CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());   
         Customer customer = new Customer(name, calendar, address, phone, customerType);
        
        
