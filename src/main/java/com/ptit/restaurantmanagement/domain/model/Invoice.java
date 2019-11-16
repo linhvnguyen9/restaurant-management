@@ -105,4 +105,9 @@ public class Invoice {
                 ", invoiceEntries=" + invoiceEntries +
                 '}';
     }
+    public Object[] toObjects(){
+        return new Object[]{
+            invoiceId, customerId , employeeId , creationTime , invoiceEntries
+        };
+    }
 }

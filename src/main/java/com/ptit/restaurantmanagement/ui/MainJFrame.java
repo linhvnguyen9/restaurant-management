@@ -8,6 +8,7 @@ package com.ptit.restaurantmanagement.ui;
 import com.ptit.restaurantmanagement.dao.CustomerDao;
 import com.ptit.restaurantmanagement.domain.model.*;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
+import com.ptit.restaurantmanagement.dao.InvoiceDao;
 import com.ptit.restaurantmanagement.dao.MenuEntryDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
@@ -37,6 +38,7 @@ public class MainJFrame extends javax.swing.JFrame {
     DefaultTableModel dtmEmployee;
     DefaultTableModel dtmCustomer;
     DefaultTableModel dtmMenuEntry;
+    DefaultTableModel dtmInvoice;
 
     public MainJFrame() {
         initComponents();
@@ -45,6 +47,7 @@ public class MainJFrame extends javax.swing.JFrame {
        dataEmployee();
        dataCustomer();
        dataMenuEntry();
+       dataInvoice();
 
         // set middle screen middle
         Toolkit toolkit = getToolkit();
@@ -91,6 +94,19 @@ public class MainJFrame extends javax.swing.JFrame {
             
             for(MenuEntry m : menuEntryDao.getListMenuEntry()){
                 dtmMenuEntry.addRow(m.toObjects());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void dataInvoice(){
+        dtmInvoice =(DefaultTableModel) TableInvoice.getModel();
+        InvoiceDao invoiceDao;
+        
+        try {
+            invoiceDao = new InvoiceDao();
+            for (Invoice i : invoiceDao.getInvoices()) {
+                dtmMenuEntry.addRow(i.toObjects());
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,6 +214,10 @@ public class MainJFrame extends javax.swing.JFrame {
          dtmMenuEntry.addRow(menuEntry.toObjects());
          
      }
+     
+     public void addInvoice(){
+        
+     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -228,7 +248,7 @@ public class MainJFrame extends javax.swing.JFrame {
         TextFieldCustomerSearch = new javax.swing.JTextField();
         PanelInvoice = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        InvoiceTable = new javax.swing.JTable();
+        TableInvoice = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
         btInvoicerSearch = new javax.swing.JButton();
         btInvoicerView = new javax.swing.JButton();
@@ -501,7 +521,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Customer", PanelCustomer);
 
-        InvoiceTable.setModel(new javax.swing.table.DefaultTableModel(
+        TableInvoice.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -509,9 +529,14 @@ public class MainJFrame extends javax.swing.JFrame {
                 "ID Invoice", "Customer ID", "Employee ID", "Time", "Total price"
             }
         ));
-        jScrollPane2.setViewportView(InvoiceTable);
+        jScrollPane2.setViewportView(TableInvoice);
 
         jButton5.setText("Add");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         btInvoicerSearch.setText("Search");
         btInvoicerSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -883,14 +908,19 @@ public class MainJFrame extends javax.swing.JFrame {
          filterMenuEntry(query);
     }//GEN-LAST:event_TextFieldSearchMenuKeyReleased
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+      InvoiceAddDialog invoiceAddDialog = new InvoiceAddDialog(this, true);
+      invoiceAddDialog.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable InvoiceTable;
     private javax.swing.JPanel PanelCustomer;
     private javax.swing.JPanel PanelEmployee;
     private javax.swing.JPanel PanelInvoice;
     private javax.swing.JPanel PanelMenu;
     public javax.swing.JTable TableCustomer;
     public javax.swing.JTable TableEmployee;
+    public javax.swing.JTable TableInvoice;
     public javax.swing.JTable TableMenu;
     private javax.swing.JTextField TextFieldCustomerSearch;
     private javax.swing.JTextField TextFieldSearchMenu;
