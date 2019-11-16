@@ -5,8 +5,14 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
+import com.ptit.restaurantmanagement.dao.EmployeesDao;
+import com.ptit.restaurantmanagement.dao.MenuEntryDao;
+import com.ptit.restaurantmanagement.domain.model.MenuEntry;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +25,6 @@ public class MenuAddDialog extends javax.swing.JDialog {
     public MenuAddDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         mainJFrame = (MainJFrame)parent;
-        
         initComponents();
            Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
@@ -40,8 +45,6 @@ public class MenuAddDialog extends javax.swing.JDialog {
         TextFieldMenuAddName = new javax.swing.JTextField();
         TextFieldMenuAddPrice = new javax.swing.JTextField();
         btMenuAddOK = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        TextFieldAddMenuID = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btMenuEdit = new javax.swing.JButton();
 
@@ -57,8 +60,6 @@ public class MenuAddDialog extends javax.swing.JDialog {
                 btMenuAddOKActionPerformed(evt);
             }
         });
-
-        jLabel3.setText("ID:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Add & Edit Menu");
@@ -78,13 +79,9 @@ public class MenuAddDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TextFieldMenuAddName, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-                            .addComponent(TextFieldAddMenuID)))
+                        .addComponent(TextFieldMenuAddName, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -104,16 +101,12 @@ public class MenuAddDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TextFieldAddMenuID, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TextFieldMenuAddName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btMenuAddOK))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TextFieldMenuAddPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -125,23 +118,32 @@ public class MenuAddDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btMenuAddOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuAddOKActionPerformed
-       int id = Integer.parseInt(TextFieldAddMenuID.getText());
+     
        String name = TextFieldMenuAddName.getText();
        double price = Double.parseDouble(TextFieldMenuAddPrice.getText());
        
-       mainJFrame.addRowMenu(id, name, price);
-       this.dispose();
-       
+       mainJFrame.addRowMenu(name, price);
     }//GEN-LAST:event_btMenuAddOKActionPerformed
 
     private void btMenuEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuEditActionPerformed
         int row= mainJFrame.TableMenu.getSelectedRow();
         
-         mainJFrame.TableMenu.setValueAt(TextFieldAddMenuID.getText(), row, 0);
-           mainJFrame.TableMenu.setValueAt(TextFieldMenuAddName.getText(), row, 1);
-             mainJFrame.TableMenu.setValueAt(TextFieldMenuAddPrice.getText(), row, 2);
+     
+        mainJFrame.TableMenu.setValueAt(TextFieldMenuAddName.getText(), row, 1);
+        mainJFrame.TableMenu.setValueAt(TextFieldMenuAddPrice.getText(), row, 2);
         
-        // TODO add your handling code here:
+        String name = TextFieldMenuAddName.getText();
+        double price = Double.parseDouble(TextFieldMenuAddPrice.getText());
+        
+        MenuEntry menuEntry = new MenuEntry(name, price);
+        int id=Integer.parseInt(mainJFrame.TableMenu.getValueAt(row,0).toString());
+        try {
+            MenuEntryDao menuEntryDao = new MenuEntryDao();
+            menuEntryDao.updateMenuEntry(menuEntry,id);
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btMenuEditActionPerformed
 
     /**
@@ -187,14 +189,12 @@ public class MenuAddDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TextFieldAddMenuID;
     private javax.swing.JTextField TextFieldMenuAddName;
     private javax.swing.JTextField TextFieldMenuAddPrice;
     private javax.swing.JButton btMenuAddOK;
     private javax.swing.JButton btMenuEdit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,8 +5,11 @@
  */
 package com.ptit.restaurantmanagement.ui;
 
+import com.ptit.restaurantmanagement.dao.CustomerDao;
 import com.ptit.restaurantmanagement.domain.model.*;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
+import com.ptit.restaurantmanagement.dao.InvoiceDao;
+import com.ptit.restaurantmanagement.dao.MenuEntryDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
 import com.ptit.restaurantmanagement.domain.model.Employee;
@@ -32,15 +35,83 @@ import javax.swing.table.TableRowSorter;
  */
 public class MainJFrame extends javax.swing.JFrame {
 
+    DefaultTableModel dtmEmployee;
+    DefaultTableModel dtmCustomer;
+    DefaultTableModel dtmMenuEntry;
+    DefaultTableModel dtmInvoice;
 
     public MainJFrame() {
         initComponents();
+        
+        
+       dataEmployee();
+       dataCustomer();
+       dataMenuEntry();
+       dataInvoice();
+
+        // set middle screen middle
         Toolkit toolkit = getToolkit();
         Dimension size = toolkit.getScreenSize();
         setLocation(size.width/2 - getWidth() /2 , size.height/2 - getHeight()/2 );
         
     }
-
+    public void dataEmployee(){
+         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
+          EmployeesDao employeesDao;
+        try {
+            employeesDao = new EmployeesDao();
+            
+            for (Employee e : employeesDao.getListEmployee()) {
+                dtmEmployee.addRow(e.toObject());
+            }
+                   
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void dataCustomer(){
+         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
+         CustomerDao customerDao;
+            
+        try {
+            customerDao = new CustomerDao();
+            
+            for (Customer c : customerDao.getListCustomer()) {
+                dtmCustomer.addRow(c.toObjects());
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void dataMenuEntry(){
+        dtmMenuEntry = (DefaultTableModel) TableMenu.getModel();
+        MenuEntryDao menuEntryDao;
+        
+        
+        try {
+            menuEntryDao = new MenuEntryDao();
+            
+            for(MenuEntry m : menuEntryDao.getListMenuEntry()){
+                dtmMenuEntry.addRow(m.toObjects());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void dataInvoice(){
+        dtmInvoice =(DefaultTableModel) TableInvoice.getModel();
+        InvoiceDao invoiceDao;
+        
+        try {
+            invoiceDao = new InvoiceDao();
+            for (Invoice i : invoiceDao.getInvoices()) {
+                dtmMenuEntry.addRow(i.toObjects());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -76,10 +147,8 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
     }
-     DefaultTableModel dtmEmployee;
-     DefaultTableModel dtmCustomer;
-     DefaultTableModel dtmMenuEntry;
-    public void addRowEmployee(int id,String name, String DOB, String address, String employeeTypeString,
+     
+    public void addRowEmployee(String name, String DOB, String address, String employeeTypeString,
                                String phone, Integer managerId, double baseSalary) throws SQLException {
         Date dobDate;
         Calendar calendar = Calendar.getInstance();
@@ -89,16 +158,18 @@ public class MainJFrame extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         EmployeeType employeeType = EmployeeType.valueOf(employeeTypeString.toUpperCase());
 
         Employee employee = new Employee(name, calendar, address, phone, employeeType, managerId, baseSalary);
       
         dtmEmployee = (DefaultTableModel) TableEmployee.getModel();
-        dtmEmployee.addRow(employee.toObject());
-        
+
         EmployeesDao employeesDao = new EmployeesDao();
-        employeesDao.insertEmployee(employee);
+        int id = employeesDao.insertEmployee(employee);
+        employee.setId(id);
+        
+        dtmEmployee.addRow(employee.toObject());
     }
     
      public void addRowCustomer(String name, String DOB, String address, 
@@ -111,21 +182,43 @@ public class MainJFrame extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());
-       
+        CustomerType customerType = CustomerType.valueOf(customerTypeString.toUpperCase());   
         Customer customer = new Customer(name, calendar, address, phone, customerType);
        
+       
+        try {
+            CustomerDao customerDao = new CustomerDao();
+            int id = customerDao.insertCustomer(customer);
+             customer.setId(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
         dtmCustomer.addRow(customer.toObjects());
- 
+        
+        
        
     }
-     public void addRowMenu(int id, String name, double price){
-         MenuEntry menuEntry = new MenuEntry(id, name, price);
-         dtmMenuEntry = (DefaultTableModel) TableMenu.getModel();
+     public void addRowMenu(String name, double price){
+         MenuEntry menuEntry = new MenuEntry(name, price);
+       
+         
+        try {
+            MenuEntryDao menuEntryDao = new MenuEntryDao();
+            int id = menuEntryDao.insertMenuEntry(menuEntry);
+            menuEntry.setEntryId(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          dtmMenuEntry = (DefaultTableModel) TableMenu.getModel();
          
          dtmMenuEntry.addRow(menuEntry.toObjects());
          
+     }
+     
+     public void addInvoice(){
+        
      }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -153,9 +246,11 @@ public class MainJFrame extends javax.swing.JFrame {
         btCustomerRemove = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        TextFieldCustomerSearch = new javax.swing.JTextField();
         PanelInvoice = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        InvoiceTable = new javax.swing.JTable();
+        TableInvoice = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
         btInvoicerSearch = new javax.swing.JButton();
         btInvoicerView = new javax.swing.JButton();
@@ -171,6 +266,8 @@ public class MainJFrame extends javax.swing.JFrame {
         btMenuRemove = new javax.swing.JButton();
         btMenuSearch = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        TextFieldSearchMenu = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -351,29 +448,43 @@ public class MainJFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel4.setText("Options");
 
+        jLabel7.setText("Search:");
+
+        TextFieldCustomerSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextFieldCustomerSearchKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelCustomerLayout = new javax.swing.GroupLayout(PanelCustomer);
         PanelCustomer.setLayout(PanelCustomerLayout);
         PanelCustomerLayout.setHorizontalGroup(
             PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelCustomerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelCustomerLayout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(jLabel4))
-                    .addGroup(PanelCustomerLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PanelCustomerLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
                                 .addComponent(btCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btCustomerRemove))
                             .addGroup(PanelCustomerLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
                                 .addComponent(btCustomerAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btCustomerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                                .addComponent(btCustomerEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(PanelCustomerLayout.createSequentialGroup()
+                                .addGap(59, 59, 59)
+                                .addComponent(jLabel4))))
+                    .addGroup(PanelCustomerLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TextFieldCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelCustomerLayout.createSequentialGroup()
                     .addGap(350, 350, 350)
@@ -397,8 +508,12 @@ public class MainJFrame extends javax.swing.JFrame {
                             .addComponent(btCustomerRemove)))
                     .addGroup(PanelCustomerLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(TextFieldCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(PanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelCustomerLayout.createSequentialGroup()
                     .addGap(233, 233, 233)
@@ -408,7 +523,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Customer", PanelCustomer);
 
-        InvoiceTable.setModel(new javax.swing.table.DefaultTableModel(
+        TableInvoice.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -416,9 +531,14 @@ public class MainJFrame extends javax.swing.JFrame {
                 "ID Invoice", "Customer ID", "Employee ID", "Time", "Total price"
             }
         ));
-        jScrollPane2.setViewportView(InvoiceTable);
+        jScrollPane2.setViewportView(TableInvoice);
 
         jButton5.setText("Add");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         btInvoicerSearch.setText("Search");
         btInvoicerSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -537,13 +657,21 @@ public class MainJFrame extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Options");
 
+        jLabel8.setText("Search:");
+
+        TextFieldSearchMenu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TextFieldSearchMenuKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelMenuLayout = new javax.swing.GroupLayout(PanelMenu);
         PanelMenu.setLayout(PanelMenuLayout);
         PanelMenuLayout.setHorizontalGroup(
             PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelMenuLayout.createSequentialGroup()
@@ -560,25 +688,34 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelMenuLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(88, 88, 88))))
+            .addGroup(PanelMenuLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(TextFieldSearchMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         PanelMenuLayout.setVerticalGroup(
             PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelMenuLayout.createSequentialGroup()
-                .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
-                    .addGroup(PanelMenuLayout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btMenuEdit)
-                            .addComponent(btMenuAdd))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btMenuRemove)
-                            .addComponent(btMenuSearch))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(45, 45, 45)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btMenuEdit)
+                    .addComponent(btMenuAdd))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btMenuRemove)
+                    .addComponent(btMenuSearch))
+                .addContainerGap(315, Short.MAX_VALUE))
+            .addGroup(PanelMenuLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(PanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(TextFieldSearchMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Menu", PanelMenu);
@@ -601,12 +738,27 @@ public class MainJFrame extends javax.swing.JFrame {
 
           EmployeeAddDialog employeeAddDialog = new EmployeeAddDialog(this, true);
           employeeAddDialog.setVisible(true);
-            
+          
+          
+          
+          
+     
     }//GEN-LAST:event_btEmployeeEditActionPerformed
 
     private void btEmployeeRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeRemoveActionPerformed
-           int row = TableEmployee.getSelectedRow();
+        int row = TableEmployee.getSelectedRow();
+        int id = Integer.parseInt(TableEmployee.getValueAt(row,0).toString());
+        
         dtmEmployee.removeRow(row);
+        
+           try {
+            EmployeesDao employeesDao = new EmployeesDao();
+            employeesDao.deleteEmployee(id);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
         // TODO add your handling code here:
     }//GEN-LAST:event_btEmployeeRemoveActionPerformed
 
@@ -643,13 +795,22 @@ public class MainJFrame extends javax.swing.JFrame {
     private void btCustomerAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerAddActionPerformed
         CustomerAddDialog customerAddDialog = new CustomerAddDialog(this, true);
         customerAddDialog.setVisible(true);
-        // TODO add your handling code here:
+        
+ 
     }//GEN-LAST:event_btCustomerAddActionPerformed
 
     private void btCustomerRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCustomerRemoveActionPerformed
-          int row = TableCustomer.getSelectedRow();
-            dtmCustomer.removeRow(row);
+        int row = TableCustomer.getSelectedRow();
+        int id = Integer.parseInt(TableCustomer.getValueAt(row,0).toString()); 
+        dtmCustomer.removeRow(row);
         
+           try {
+            CustomerDao customerDao = new CustomerDao();
+            customerDao.deleteCustomer(id);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_btCustomerRemoveActionPerformed
 
@@ -680,7 +841,6 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void btMenuAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuAddActionPerformed
         MenuAddDialog menuAddDialog = new MenuAddDialog(this,true);
-      
         menuAddDialog.setVisible(true);
         
         // TODO add your handling code here:
@@ -688,8 +848,17 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void btMenuRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuRemoveActionPerformed
           int row = TableMenu.getSelectedRow();
-          
-          dtmMenuEntry.removeRow(row);
+          int id = Integer.parseInt(TableMenu.getValueAt(row,0).toString()); 
+        dtmMenuEntry.removeRow(row);
+        
+           try {
+            MenuEntryDao menuEntryDao = new MenuEntryDao();
+            menuEntryDao.deleteMenuEntry(id);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
           
           
     }//GEN-LAST:event_btMenuRemoveActionPerformed
@@ -720,16 +889,43 @@ public class MainJFrame extends javax.swing.JFrame {
     private void jTextFieldSearchEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchEmployeeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldSearchEmployeeActionPerformed
+      public void filterCustomer(String querry){
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dtmCustomer);
+        TableCustomer.setRowSorter(tr);
+        
+        tr.setRowFilter(RowFilter.regexFilter(querry));
+    }
+    private void TextFieldCustomerSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldCustomerSearchKeyReleased
+         String query = TextFieldCustomerSearch.getText().toLowerCase();
+        filterCustomer(query);
+    }//GEN-LAST:event_TextFieldCustomerSearchKeyReleased
+     public void filterMenuEntry(String querry){
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dtmMenuEntry);
+        TableMenu.setRowSorter(tr);
+        
+        tr.setRowFilter(RowFilter.regexFilter(querry));
+    }
+    private void TextFieldSearchMenuKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldSearchMenuKeyReleased
+         String query = TextFieldSearchMenu.getText().toLowerCase();
+         filterMenuEntry(query);
+    }//GEN-LAST:event_TextFieldSearchMenuKeyReleased
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+      InvoiceAddDialog invoiceAddDialog = new InvoiceAddDialog(this, true);
+      invoiceAddDialog.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable InvoiceTable;
     private javax.swing.JPanel PanelCustomer;
     private javax.swing.JPanel PanelEmployee;
     private javax.swing.JPanel PanelInvoice;
     private javax.swing.JPanel PanelMenu;
     public javax.swing.JTable TableCustomer;
     public javax.swing.JTable TableEmployee;
+    public javax.swing.JTable TableInvoice;
     public javax.swing.JTable TableMenu;
+    private javax.swing.JTextField TextFieldCustomerSearch;
+    private javax.swing.JTextField TextFieldSearchMenu;
     private javax.swing.JButton btCustomerAdd;
     private javax.swing.JButton btCustomerEdit;
     private javax.swing.JButton btCustomerRemove;
@@ -756,6 +952,8 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -8,7 +8,7 @@ import java.sql.Statement;
 public class RestaurantManagementDatabase {
     public static final String DATABASENAME = "testDb";
     public static final String USER = "root";
-    public static final String PASS = "";
+    public static final String PASS = "Maidacbien1966";
     public static final String BASEURL = "jdbc:mysql://localhost:3306/" + DATABASENAME;
 
     public static void createDatabase(Connection connection) throws SQLException {
@@ -29,6 +29,7 @@ public class RestaurantManagementDatabase {
             createInvoiceTable(connection);
             createTimeSheetTable(connection);
             createLineTable(connection);
+          
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
