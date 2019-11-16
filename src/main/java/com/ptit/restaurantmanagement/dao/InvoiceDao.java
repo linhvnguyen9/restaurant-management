@@ -63,7 +63,7 @@ public class InvoiceDao {
         return invoiceFromResultSet(rs);
     }
 
-    private Invoice invoiceFromResultSet (ResultSet rs) throws SQLException {
+    private Invoice invoiceFromResultSet(ResultSet rs) throws SQLException {
         int invoiceId = rs.getInt("id_invoice");
         int customerId = rs.getInt("id_customer");
         int employeeId = rs.getInt("id_employee");
@@ -80,5 +80,23 @@ public class InvoiceDao {
         PreparedStatement preparedStatement = connection.prepareStatement(delete);
         preparedStatement.setInt(1, id);
         preparedStatement.executeUpdate();
+    }
+
+    public int calculateInvoiceSum(int invoiceId) throws SQLException {
+        String query = "SELECT SUM(price*quantity) " +
+                "FROM line, invoice, menu_entry " +
+                "WHERE (line.id_invoice = invoice.id_invoice " +
+                    "AND menu_entry.id_menu_entry = line.id_menu_entry " +
+                "AND line.id_invoice = ?)";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, invoiceId);
+
+        System.out.println(preparedStatement.toString());
+
+        ResultSet result = preparedStatement.executeQuery();
+        result.next();
+
+        return result.getInt(1);
     }
 }

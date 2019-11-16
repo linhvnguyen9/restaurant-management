@@ -6,29 +6,22 @@
 package com.ptit.restaurantmanagement.ui;
 
 import com.ptit.restaurantmanagement.dao.CustomerDao;
-import com.ptit.restaurantmanagement.domain.model.*;
 import com.ptit.restaurantmanagement.dao.EmployeesDao;
 import com.ptit.restaurantmanagement.dao.InvoiceDao;
 import com.ptit.restaurantmanagement.dao.MenuEntryDao;
-import com.ptit.restaurantmanagement.domain.model.Customer;
-import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-import com.ptit.restaurantmanagement.domain.model.MenuEntry;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.sql.SQLException;
+import com.ptit.restaurantmanagement.domain.model.*;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.RowFilter;
-import javax.swing.table.TableRowSorter;
 
 /**
  * @author Viet
@@ -217,9 +210,18 @@ public class MainJFrame extends javax.swing.JFrame {
          
      }
      
-     public void addInvoice(){
-        
+     public void addInvoice(int id){
+         InvoiceDao invoiceDao;
+        try {
+            invoiceDao = new InvoiceDao();
+            Invoice invoice = invoiceDao.getInvoiceByInvoiceId(id);
+            dtmInvoice = (DefaultTableModel) TableInvoice.getModel();
+            dtmInvoice.addRow(new Object[]{id, invoice.getCustomerId(), invoice.getEmployeeId(), invoice.getCreationTime(), invoiceDao.calculateInvoiceSum(invoice.getInvoiceId())});
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
      }
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
