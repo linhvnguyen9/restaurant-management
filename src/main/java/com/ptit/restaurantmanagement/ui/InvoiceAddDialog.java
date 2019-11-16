@@ -6,12 +6,15 @@
 package com.ptit.restaurantmanagement.ui;
 
 import com.ptit.restaurantmanagement.dao.InvoiceDao;
+import com.ptit.restaurantmanagement.dao.LineDao;
 import com.ptit.restaurantmanagement.dao.MenuEntryDao;
 import com.ptit.restaurantmanagement.domain.model.Invoice;
+import com.ptit.restaurantmanagement.domain.model.Line;
 import com.ptit.restaurantmanagement.domain.model.MenuEntry;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InvoiceAddDialog extends javax.swing.JDialog {
 
+        private Invoice invoice = null;
+        
        MainJFrame mainJFrame;
        DefaultTableModel dtmInvoiceMenu;
     public InvoiceAddDialog(java.awt.Frame parent, boolean modal) {
@@ -189,11 +194,30 @@ public class InvoiceAddDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_TableInvoiceMenuMouseClicked
 
     private void btAddInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddInvoiceActionPerformed
-        dtmInvoiceMenu = (DefaultTableModel) TableInvoiceMenu.getModel();   
+        dtmInvoiceMenu = (DefaultTableModel) TableInvoiceMenu.getModel(); 
+        
         int customerID = Integer.parseInt(TextFieldInvoiceCustomerID.getText());
         int employeeID = Integer.parseInt(TextFieldInvoiceCustomerID.getText());
         int IDMenuEntry = Integer.parseInt(TextFieldIDMenuEntry.getText());
         int quantity = Integer.parseInt(TextFieldQuantity.getText());
+        
+        int invoiceId = 0;
+        
+        if (this.invoice == null) {
+            Invoice newInvoice = new Invoice(customerID, employeeID, Calendar.getInstance());
+            this.invoice = newInvoice;
+            
+            try {
+                InvoiceDao invoiceDao = new InvoiceDao();
+                invoiceId = invoiceDao.insertInvoice(newInvoice);
+                this.invoice.setInvoiceId(invoiceId);
+            } catch (SQLException ex) {
+                Logger.getLogger(InvoiceAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            invoiceId = this.invoice.getInvoiceId();
+        }
+        
          MenuEntryDao menuEntryDao;
          MenuEntry menuEntry = null;
            try {
@@ -202,8 +226,20 @@ public class InvoiceAddDialog extends javax.swing.JDialog {
            } catch (SQLException ex) {
                Logger.getLogger(InvoiceAddDialog.class.getName()).log(Level.SEVERE, null, ex);
            }
-
-           dtmInvoiceMenu.addRow(menuEntry.toObjects());
+           
+           Line line = new Line(invoiceId, menuEntry.getEntryId(), quantity);
+           LineDao lineDao;
+           
+            try {
+                lineDao = new LineDao();
+                 lineDao.insertLine(line);
+            } catch (SQLException ex) {
+                Logger.getLogger(InvoiceAddDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+           dtmInvoiceMenu.addRow(new Object[]{
+            menuEntry.getEntryId(), menuEntry.getName(), menuEntry.getPrice(), line.getQuantity()
+        });
         
     }//GEN-LAST:event_btAddInvoiceActionPerformed
 
