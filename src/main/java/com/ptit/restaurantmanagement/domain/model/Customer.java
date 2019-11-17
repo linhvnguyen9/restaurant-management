@@ -16,6 +16,7 @@ public class Customer extends Person {
         this.customerType = customerType;
     }
 
+
     public CustomerType getCustomerType() {
         return customerType;
     }

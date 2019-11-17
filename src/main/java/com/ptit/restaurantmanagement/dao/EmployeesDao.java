@@ -1,15 +1,12 @@
-
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
 import com.ptit.restaurantmanagement.domain.model.Employee;
 import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-import com.ptit.restaurantmanagement.domain.model.Person;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class EmployeesDao {
     private Statement statement;
@@ -120,6 +117,7 @@ public class EmployeesDao {
         dob.setTime(rs.getDate("dob"));
 
         String address = (rs.getString("addr"));
+        String phoneNumber = rs.getString("phone_number");
         EmployeeType employeeType;
         if (rs.getString("type").equals("MANAGER")) {
             employeeType = EmployeeType.MANAGER;
@@ -129,6 +127,6 @@ public class EmployeesDao {
         }
         int managerId = rs.getInt("id_manager");
         double salary = rs.getDouble("salary");
-        return new Employee(employeeId, name, dob, address, employeeType, managerId, salary);
+        return new Employee(employeeId, name, dob, address, phoneNumber, employeeType, managerId, salary);
     }
 }

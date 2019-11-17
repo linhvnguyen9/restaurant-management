@@ -21,6 +21,12 @@ public class Invoice {
         }
     }
 
+    public Invoice(int customerId, int employeeId, Calendar creationTime) {
+        this.customerId = customerId;
+        this.employeeId = employeeId;
+        this.creationTime = creationTime;
+    }
+
     public int getInvoiceId() {
         return invoiceId;
     }
@@ -87,5 +93,22 @@ public class Invoice {
         }
 
         return total;
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId=" + invoiceId +
+                ", customerId=" + customerId +
+                ", employeeId=" + employeeId +
+                ", creationTime=" + creationTime +
+                ", invoiceEntries=" + invoiceEntries +
+                '}';
+    }
+  
+    public Object[] toObjects(){
+        return new Object[]{
+            invoiceId, customerId , employeeId , creationTime , invoiceEntries
+        };
     }
 }

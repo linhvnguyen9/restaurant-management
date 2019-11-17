@@ -26,6 +26,10 @@ public class RestaurantManagementDatabase {
             createEmployeesTable(connection);
             createCustomerTable((connection));
             createMenuEntryTable(connection);
+            createInvoiceTable(connection);
+            createTimeSheetTable(connection);
+            createLineTable(connection);
+          
             return connection;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -41,7 +45,9 @@ public class RestaurantManagementDatabase {
                 "id_person int auto_increment primary key not null,"+
                 "name varchar(255) not null,"+
                 "dob date,"+
-                "addr varchar(255))";
+                "addr varchar(255)," +
+                "phone_number varchar(20)" +
+                ")";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
@@ -64,11 +70,12 @@ public class RestaurantManagementDatabase {
                 "(id_customer int not null,"+
                 "type varchar(255) not null,"+
                 "primary key(id_customer),"+
-                "foreign key (id_customer) references person(id_person))";
+                "foreign key (id_customer) references person(id_person) ON DELETE CASCADE)";
 
         Statement statement = connection.createStatement();
         statement.execute(query);
     }
+
     private static void createMenuEntryTable(Connection connection) throws SQLException {
         String query = "CREATE TABLE IF NOT EXISTS menu_entry("+
                 "id_menu_entry int auto_increment not null,"+
@@ -79,7 +86,43 @@ public class RestaurantManagementDatabase {
         Statement statement = connection.createStatement();
         statement.execute(query);
     }
-    public static void main(String[] args) {
-        getConnection();
+
+    private static void createInvoiceTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS invoice (" +
+                "id_invoice INT AUTO_INCREMENT NOT NULL," +
+                "id_customer INT NOT NULL," +
+                "id_employee INT NOT NULL," +
+                "time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "PRIMARY KEY (id_invoice)," +
+                "FOREIGN KEY (id_customer) REFERENCES customer(id_customer) ON DELETE CASCADE," +
+                "FOREIGN KEY (id_employee) REFERENCES employee(id_employee) ON DELETE CASCADE" +
+                ")";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createTimeSheetTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS timesheet ("+
+                "id_employee int,"+
+                "month int,"+
+                "year int,"+
+                "workdays int,"+
+                "primary key (id_employee,month,year),"+
+                "foreign key (id_employee) references person(id_person) ON DELETE CASCADE)";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+    private static void createLineTable(Connection connection) throws SQLException {
+        String query = "CREATE TABLE IF NOT EXISTS line ("+
+                "id_invoice int,"+
+                "id_menu_entry int,"+
+                "quantity int,"+
+                "primary key (id_invoice,id_menu_entry),"+
+                "foreign key (id_invoice) references invoice(id_invoice)  ON DELETE CASCADE,"+
+                "foreign key (id_menu_entry) references  menu_entry(id_menu_entry) ON DELETE CASCADE)";
+
+        Statement statement = connection.createStatement();
+        statement.execute(query);
     }
 }

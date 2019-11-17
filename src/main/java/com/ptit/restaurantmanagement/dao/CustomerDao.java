@@ -1,16 +1,14 @@
+
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
+import com.ptit.restaurantmanagement.database.dto.CustomerIdAndInvoiceSumDto;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
-
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class CustomerDao {
     private Statement statement;
@@ -24,14 +22,14 @@ public class CustomerDao {
     }
 
     public int insertCustomer(Customer customer) throws SQLException {
-        int personId = personDao.insertPerson(customer);
-
-        String createCustomer = "INSERT INTO customer VALUES(?, ?)";
+        String createCustomer = "INSERT INTO customer VALUES(?, ?);";
 
         PreparedStatement preparedStatement = stament.prepareStatement(createCustomer);
+
+        int personId = personDao.insertPerson(customer);
+
         preparedStatement.setInt(1, personId);
         preparedStatement.setString(2, customer.getCustomerType().toString());
-
         preparedStatement.executeUpdate();
 
         return personId;
@@ -44,78 +42,111 @@ public class CustomerDao {
             PreparedStatement ps = stament.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id_person");
-                String name = (rs.getString("name"));
-
-                Calendar dob = Calendar.getInstance();
-                dob.setTime(rs.getDate("dob"));
-
-                String address = (rs.getString("addr"));
-                CustomerType type;
-                if (rs.getString("type").equals("NORMAL"))
-                    type = CustomerType.NORMAL;
-                else
-                    type = CustomerType.VIP;
-                Customer s = new Customer(id, name, dob, address, type);
-                listCustomer.add(s);
-
-                for (int i = 0; i < listCustomer.size(); i++)
-                    System.out.println(listCustomer.get(i).toString());
-
-                return listCustomer;
+                listCustomer.add(CustomerFromResultSet(rs));
             }
+            return listCustomer;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //print out listEmployee
-        for (int i=0;i<listCustomer.size();i++)
-            System.out.println(listCustomer.get(i).toString());
         return new ArrayList<>();
-
     }
 
     public void updateCustomer(Customer customer, int id) throws SQLException {
-        //update employee
+        personDao.updatePerson(customer, id);
 
-        String updateEmployees = "UPDATE customer SET type=? WHERE id_customer=?;";
-        PreparedStatement pstmt = stament.prepareStatement(updateEmployees);
+        String updateCustomer = "UPDATE customer SET type=? WHERE id_customer=?;";
+        PreparedStatement pstmt = stament.prepareStatement(updateCustomer);
 
         pstmt.setString(1, customer.getCustomerType().toString());
         pstmt.setInt(2, id);
         pstmt.executeUpdate();
-
-        //update person
-        String updatePerson = "UPDATE person SET name=?, dob=?, addr=? WHERE id_person=?;";
-        PreparedStatement pstmt2 = stament.prepareStatement(updatePerson);
-
-        pstmt2.setString(1, customer.getName());
-
-        Date utilDate = customer.getDob().getTime();
-        java.sql.Date date = new java.sql.Date(utilDate.getTime());
-
-        pstmt2.setDate(2, date);
-        pstmt2.setString(3, customer.getAddress());
-        pstmt2.setInt(4, id);
-
-        System.out.println(pstmt2.toString());
-        pstmt2.executeUpdate();
-
     }
+
     public void deleteCustomer(int id) throws SQLException {
-        String delete = "delete from employee where id_employee=?;";
-        PreparedStatement pstmCustomer = stament.prepareStatement(delete);
-        pstmCustomer.setInt(1, id);
-        pstmCustomer.executeUpdate();
-
-        String deletePerson = "delete from person where id_person=?;";
-        PreparedStatement pstmtPerson = stament.prepareStatement(deletePerson);
-        pstmtPerson.setInt(1, id);
-        pstmtPerson.executeUpdate();
+        personDao.deletePerson(id);
     }
 
-    public void searchListCustomer(String name) {
-        for (int i = 0; i < listCustomer.size(); i++)
-            if (listCustomer.get(i).getName().equals(name))
-                System.out.println(listCustomer.get(i).toString());
+    public Customer getCustomerById(int id) throws SQLException {
+        String search = "select * from person,customer where id_person=id_customer and id_customer=?;";
+        PreparedStatement pstmCustomer = stament.prepareStatement(search);
+        pstmCustomer.setInt(1, id);
+
+        ResultSet rs = pstmCustomer.executeQuery();
+        rs.next();
+
+        return CustomerFromResultSet(rs);
+    }
+
+    public ArrayList<Customer> getCustomerByName(String name) throws SQLException {
+        String search = String.format("SELECT * FROM person,customer WHERE id_person=id_customer AND name LIKE '%%%s%%'", name);
+        Statement statement = stament.createStatement();
+
+        ResultSet rs = statement.executeQuery(search);
+
+        ArrayList<Customer> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(CustomerFromResultSet(rs));
+        }
+
+        return result;
+    }
+
+    private Customer CustomerFromResultSet(ResultSet rs) throws SQLException {
+        int customerId = rs.getInt("id_person");
+        String name = rs.getString("name");
+
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(rs.getDate("dob"));
+
+        String address = (rs.getString("addr"));
+        String phoneNumber = rs.getString("phone_number");
+        CustomerType customerType;
+        if (rs.getString("type").equals("VIP")) {
+            customerType = CustomerType.VIP;
+        } else {
+            customerType = CustomerType.NORMAL;
+        }
+        return new Customer(customerId, name, dob, address, phoneNumber, customerType);
+    }
+
+    public ArrayList<CustomerIdAndInvoiceSumDto> displayCustomerTotalAmountPurchased() throws SQLException {
+        String query = "SELECT id_customer, name, SUM(total) " +
+                        "FROM " +
+                            "((SELECT customer.id_customer, person.name, invoice.id_invoice, SUM(quantity*price) " +
+                            "as total " +
+                            "FROM customer, invoice, line, menu_entry, person " +
+                            "WHERE (invoice.id_customer = customer.id_customer " +
+                                "AND line.id_invoice = invoice.id_invoice " +
+                                "AND menu_entry.id_menu_entry = line.id_menu_entry " +
+                                "AND person.id_person = customer.id_customer) " +
+                            "GROUP BY invoice.id_invoice) as totalbill) " +
+                        "GROUP BY id_customer;";
+
+        Statement stmt = stament.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        ArrayList<CustomerIdAndInvoiceSumDto> result = new ArrayList<>();
+
+        while (rs.next()) {
+            int customerId = rs.getInt(1);
+            String customerName = rs.getString(2);
+            int sum = rs.getInt(3);
+
+            CustomerIdAndInvoiceSumDto temp = new CustomerIdAndInvoiceSumDto(customerId, customerName, sum);
+            System.out.println(temp);
+            result.add(temp);
+        }
+
+        return result;
+    }
+
+    public void updateVipCustomers() throws SQLException {
+        String query = "SET SQL_SAFE_UPDATES = 0";
+        Statement stmt = stament.createStatement();
+        stmt.executeQuery(query);
+
+        query = "UPDATE customer SET customer.type = 'VIP' WHERE customer.id_customer IN (SELECT id_customer FROM ((SELECT id_customer, name, SUM(total) as total2 FROM ((SELECT customer.id_customer, person.name, invoice.id_invoice, SUM(quantity*price) as total FROM customer, invoice, line, menu_entry, person WHERE (invoice.id_customer = customer.id_customer AND line.id_invoice = invoice.id_invoice AND menu_entry.id_menu_entry = line.id_menu_entry AND person.id_person = customer.id_customer) GROUP BY invoice.id_invoice) as totalbill) GROUP BY id_customer) as report) WHERE total2>1000000)";
+
+        stmt.executeUpdate(query);
     }
 }
