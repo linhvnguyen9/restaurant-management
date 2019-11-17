@@ -62,8 +62,10 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void dataCustomer(){
          dtmCustomer = (DefaultTableModel) TableCustomer.getModel();
+         dtmCustomer.setRowCount(0);
          CustomerDao customerDao;
             
         try {
@@ -77,6 +79,7 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void dataMenuEntry(){
         dtmMenuEntry = (DefaultTableModel) TableMenu.getModel();
         MenuEntryDao menuEntryDao;
@@ -932,7 +935,13 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+        try {
+            CustomerDao dao = new CustomerDao();
+            dao.updateVipCustomers();
+            dataCustomer();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
