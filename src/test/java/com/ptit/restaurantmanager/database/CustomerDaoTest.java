@@ -32,8 +32,11 @@ public class CustomerDaoTest {
     }
     @Test
     public void getListCustomer(){
-        customerDao.getListCustomer();
+        for (Customer customer : customerDao.getListCustomer()) {
+            System.out.println(customer);
+        }
     }
+
     @Test
     public void searchCustomer() {
         try {
