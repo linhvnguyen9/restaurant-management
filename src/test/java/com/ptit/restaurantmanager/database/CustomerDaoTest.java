@@ -3,8 +3,6 @@ package com.ptit.restaurantmanager.database;
 import com.ptit.restaurantmanagement.dao.CustomerDao;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
-import com.ptit.restaurantmanagement.domain.model.Employee;
-import com.ptit.restaurantmanagement.domain.model.EmployeeType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +68,15 @@ public class CustomerDaoTest {
         try {
             customerDao.deleteCustomer(1);
         } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void displayReport() {
+        try {
+            customerDao.displayCustomerTotalAmountPurchased();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

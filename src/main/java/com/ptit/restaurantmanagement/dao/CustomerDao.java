@@ -2,6 +2,7 @@
 package com.ptit.restaurantmanagement.dao;
 
 import com.ptit.restaurantmanagement.database.RestaurantManagementDatabase;
+import com.ptit.restaurantmanagement.database.dto.CustomerIdAndInvoiceSumDto;
 import com.ptit.restaurantmanagement.domain.model.Customer;
 import com.ptit.restaurantmanagement.domain.model.CustomerType;
 
@@ -122,10 +123,40 @@ public class CustomerDao {
         CustomerType customerType;
         if (rs.getString("type").equals("VIP")) {
             customerType = CustomerType.VIP;
-        }
-        else {
+        } else {
             customerType = CustomerType.NORMAL;
         }
         return new Customer(customerId, name, dob, address, phoneNumber, customerType);
+    }
+
+    public ArrayList<CustomerIdAndInvoiceSumDto> displayCustomerTotalAmountPurchased() throws SQLException {
+        String query = "SELECT id_customer, name, SUM(total) " +
+                        "FROM " +
+                            "((SELECT customer.id_customer, person.name, invoice.id_invoice, SUM(quantity*price) " +
+                            "as total " +
+                            "FROM customer, invoice, line, menu_entry, person " +
+                            "WHERE (invoice.id_customer = customer.id_customer " +
+                                "AND line.id_invoice = invoice.id_invoice " +
+                                "AND menu_entry.id_menu_entry = line.id_menu_entry " +
+                                "AND person.id_person = customer.id_customer) " +
+                            "GROUP BY invoice.id_invoice) as totalbill) " +
+                        "GROUP BY id_customer;";
+
+        Statement stmt = stament.createStatement();
+        ResultSet rs = stmt.executeQuery(query);
+
+        ArrayList<CustomerIdAndInvoiceSumDto> result = new ArrayList<>();
+
+        while (rs.next()) {
+            int customerId = rs.getInt(1);
+            String customerName = rs.getString(2);
+            int sum = rs.getInt(3);
+
+            CustomerIdAndInvoiceSumDto temp = new CustomerIdAndInvoiceSumDto(customerId, customerName, sum);
+            System.out.println(temp);
+            result.add(temp);
+        }
+
+        return result;
     }
 }
