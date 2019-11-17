@@ -57,4 +57,13 @@ public class InvoiceDaoTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void calculateInvoiceSum() {
+        try {
+            System.out.println(dao.calculateInvoiceSum(5));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

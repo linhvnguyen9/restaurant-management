@@ -123,6 +123,9 @@ public class CustomerDao {
                         "GROUP BY id_customer;";
 
         Statement stmt = stament.createStatement();
+
+        System.out.println(query);
+
         ResultSet rs = stmt.executeQuery(query);
 
         ArrayList<CustomerIdAndInvoiceSumDto> result = new ArrayList<>();
@@ -146,6 +149,8 @@ public class CustomerDao {
         stmt.executeQuery(query);
 
         query = "UPDATE customer SET customer.type = 'VIP' WHERE customer.id_customer IN (SELECT id_customer FROM ((SELECT id_customer, name, SUM(total) as total2 FROM ((SELECT customer.id_customer, person.name, invoice.id_invoice, SUM(quantity*price) as total FROM customer, invoice, line, menu_entry, person WHERE (invoice.id_customer = customer.id_customer AND line.id_invoice = invoice.id_invoice AND menu_entry.id_menu_entry = line.id_menu_entry AND person.id_person = customer.id_customer) GROUP BY invoice.id_invoice) as totalbill) GROUP BY id_customer) as report) WHERE total2>1000000)";
+
+        System.out.println(query);
 
         stmt.executeUpdate(query);
     }

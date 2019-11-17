@@ -84,4 +84,12 @@ public class CustomerDaoTest {
         }
     }
 
+    @Test
+    void updateStatus() {
+        try {
+            customerDao.updateVipCustomers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -95,6 +95,7 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void dataInvoice(){
         dtmInvoice =(DefaultTableModel) TableInvoice.getModel();
         InvoiceDao invoiceDao;
@@ -102,6 +103,7 @@ public class MainJFrame extends javax.swing.JFrame {
         try {
             invoiceDao = new InvoiceDao();
             for (Invoice i : invoiceDao.getInvoices()) {
+                System.out.println(i);
                 dtmInvoice.addRow(new Object[]{
                         i.getInvoiceId(), i.getCustomerId() , i.getEmployeeId() , i.getCreationTime() , invoiceDao.calculateInvoiceSum(i.getInvoiceId())
                 });
@@ -895,13 +897,29 @@ public class MainJFrame extends javax.swing.JFrame {
    
     }//GEN-LAST:event_btMenuEditActionPerformed
      public void filterEmployee(String querry){
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dtmEmployee);
-        TableEmployee.setRowSorter(tr);
+//        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dtmEmployee);
+//        TableEmployee.setRowSorter(tr);
+//        
+//        tr.setRowFilter(RowFilter.regexFilter(querry));
+        try {
+            System.out.println("FilterEmployee" + querry);
+             dtmEmployee.setRowCount(0);
+            EmployeesDao dao = new EmployeesDao();
+            
+            for (Employee employee : dao.getEmployeesByName(querry)) {
+                System.out.println(employee);
+                dtmEmployee.addRow(employee.toObject());
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
         
-        tr.setRowFilter(RowFilter.regexFilter(querry));
     }
     private void jTextFieldSearchEmployeeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSearchEmployeeKeyReleased
         String query = jTextFieldSearchEmployee.getText().toLowerCase();
+        System.out.println(query);
         filterEmployee(query);
     }//GEN-LAST:event_jTextFieldSearchEmployeeKeyReleased
 
