@@ -31,4 +31,10 @@ public class CustomerIdAndInvoiceSumDto {
                 ", sum=" + sum +
                 '}';
     }
+
+    public Object[] toObject() {
+        return new Object[]{
+                customerId, customerName, sum
+        };
+    }
 }

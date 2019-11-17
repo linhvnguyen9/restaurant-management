@@ -780,9 +780,8 @@ public class MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btEmployeeRemoveActionPerformed
 
     private void btInvoicerViewReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btInvoicerViewReportActionPerformed
-        //
-
-// TODO add your handling code here:
+        InvoiceReportDialog reportDialog = new InvoiceReportDialog(this, false);
+        reportDialog.setVisible(true);
     }//GEN-LAST:event_btInvoicerViewReportActionPerformed
 
     private void btEmployeeAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEmployeeAddActionPerformed
